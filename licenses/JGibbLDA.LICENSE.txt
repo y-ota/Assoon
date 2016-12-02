@@ -1,0 +1,19 @@
+JGibbLDA
+
+A Java Implementation of Latent Dirichlet Allocation (LDA) 
+using Gibbs Sampling for Parameter Estimation and Inference
+
+http://jgibblda.sourceforge.net/
+
+Copyright © 2008 by
+
+Xuan-Hieu Phan (pxhieu at gmail dot com), Graduate School of Information Sciences, Tohoku University
+Cam-Tu Nguyen (ncamtu at gmail dot com), College of Technology, Vietnam National University, Hanoi
+
+License
+
+JGibbLDA is a free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation.
+
+JGibbLDA is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with JGibbLDA; if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
