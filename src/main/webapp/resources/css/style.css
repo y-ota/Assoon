@@ -192,9 +192,10 @@ table {
 .setting-form {
 	width: 570px;
 	margin: auto;
-	border: 1px solid #E3E3E3;
+	border: 1px solid #f9c510;
 	padding: 19px;
 	min-height: 20px;
+	color: #757575;
 }
 
 #number {
@@ -247,7 +248,7 @@ img.stepbtn {
 }
 
 p {
-	color:#4D4D4D;
+	color:#757575;
 	font-size: 14px;
 	margin-top: 0;
 }
@@ -278,5 +279,5 @@ p {
 }
 #path {
 	height:41px;
-	border: 1px solid #E3E3E3;
+	border: 1px solid #f9c510;
 }
