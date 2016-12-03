@@ -1,6 +1,6 @@
-<%@page import="jp.co.asoq.Paramaters"%>
-<%@page import="jp.co.asoq.TopicInfo"%>
-<%@page import="jp.co.asoq.WordProp"%>
+<%@page import="jp.assoon.Paramaters"%>
+<%@page import="jp.assoon.TopicInfo"%>
+<%@page import="jp.assoon.WordProp"%>
 <%@page import="java.util.List"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>
@@ -11,7 +11,7 @@
 <html lang="jp">
 <head>
 <meta charset="UTF-8">
-<title>ASOQ</title>
+<title>Assoon</title>
 <link rel="stylesheet" type="text/css"
 	href="<c:url value="/resources/css/style.css" />" />
 <link rel="stylesheet" type="text/css"
@@ -26,7 +26,7 @@
 <script src='<c:url value="/resources/js/jquery-1.8.3.js" />'></script>
 <script src='<c:url value="/resources/js/jquery-ui.js" />'></script>
 <script src='<c:url value="/resources/js/icheck.js" />'></script>
-<script src='<c:url value="/resources/js/asoq.js" />'></script>
+<script src='<c:url value="/resources/js/assoon.js" />'></script>
 </head>
 <body>
 	<div id="demo"></div>

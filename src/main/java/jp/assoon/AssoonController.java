@@ -221,7 +221,7 @@ public class AssoonController {
 		model.addAttribute("topicInfo", topicInfoList);
 		model.addAttribute("param", paramaters);
 
-		return "asoq";
+		return "assoon";
 	}
 
 }
