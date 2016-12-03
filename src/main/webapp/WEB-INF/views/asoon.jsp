@@ -17,7 +17,7 @@
 <link rel="stylesheet" type="text/css"
 	href="<c:url value="/resources/css/skins/minimal/minimal.css" />" />
 <link rel="stylesheet"
-	href="http://code.jquery.com/ui/1.9.2/themes/base/jquery-ui.css" />
+	href="<c:url value="/resources/css/jquery-ui.css" />" />
 <link rel="icon" type="image/png"
 	href="<c:url value="/resources/image/asoq_logo.png" />" sizes="32x32">
 <script src='<c:url value="/resources/js/d3.js" />'></script>
@@ -38,7 +38,7 @@
 		</h1>
 		<div class="top">
 			<p>
-				Assoonは大量の自由記述アンケートの回答を自動的に要約するWebシステムです。<br>
+				Assoonは自由記述アンケートの回答を自動的に要約するWebシステムです。<br>
 				テキストファイルをアップロードするだけで簡単にご利用できます。
 			</p>
 		</div>

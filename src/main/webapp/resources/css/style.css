@@ -23,11 +23,11 @@
 h1 {
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue",
 		"Helvetica", "Arial", "Verdana", "sans-serif";
-	font-size: 75px;
-	padding: 30px 0;
+	font-size: 85px;
+	padding: 0px 0;
 	text-align: center;
 	margin-bottom: 0;
-	font-weight: 100;
+	font-weight: 800;
 }
 
 h2 {
@@ -72,13 +72,13 @@ html {
 	clear: both;
 	text-align: center;
 	padding: 0px 0;
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .divider_line {
 	display: block;
 	width: 100%;
-	border-top: 1px solid #CBCBCB;
+	border-top: 0.5px solid #E3E3E3;
 }
 
 .label {
@@ -170,6 +170,8 @@ table {
 
 #alpha, #beta, #topic {
 	width: 30px;
+	border: 1px solid #e3e3e3;
+	
 }
 
 #iter {
@@ -183,7 +185,7 @@ table {
 .setting-form {
 	width: 570px;
 	margin: auto;
-	border: 1px solid #e3e3e3;
+	border: 1px solid #E3E3E3;
 	padding: 19px;
 	min-height: 20px;
 }
@@ -212,7 +214,11 @@ table {
 }
 
 #setting, #btn-upload, #btn-run {
-	height: 41.0px;
+	height: 39px;
+}
+
+#btn-run {
+	margin-left: 3px;
 }
 
 li {
@@ -247,8 +253,8 @@ p {
 }
 
 #step-div {
-	font-weight: 500;
-	font-size: 38px;
+	font-weight: 600;
+	font-size: 30px;
 }
 
 #topicnum {
@@ -259,4 +265,7 @@ p {
 
 .version {
 	font-size: 13px;
+}
+#path {
+	border: 1px solid #E3E3E3;
 }
