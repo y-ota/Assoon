@@ -66,6 +66,7 @@ html {
 	text-align: center;
 	padding: 50px 0;
 	font-size: 13px;
+	margin-top: -2%;
 }
 
 .top p {
@@ -240,6 +241,8 @@ img.stepbtn {
 }
 
 p {
+	color:#4D4D4D;
+	font-size: 14px;
 	margin-top: 0;
 }
 
@@ -255,6 +258,7 @@ p {
 #step-div {
 	font-weight: 600;
 	font-size: 30px;
+	margin-top: -1%;
 }
 
 #topicnum {

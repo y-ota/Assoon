@@ -81,8 +81,7 @@
 						<span id="text-word">STEP1 ファイル選択</span>
 					</div>
 					<p>
-						<img src="<c:url value="/resources/image/openbtn.png" />"
-							width="60" height="35" class="stepbtn">を押してテキストファイルを選択します。<br>
+						OPENを押してテキストファイルを選択します。<br>
 						テキストファイルの形式は、<span style="text-decoration: underline">1行につき1意見</span>です。
 					</p>
 					<div class="divider_line">&nbsp;</div>
@@ -91,8 +90,7 @@
 						<span id="text-word">STEP2 実行</span>
 					</div>
 					<p>
-						<img src="<c:url value="/resources/image/runbtn.png" />"
-							width="60" height="35" class="stepbtn">を押すと処理が始まり、要約結果が表示されます。
+						RUNを押すと処理が始まり、要約結果が表示されます。
 					</p>
 					<img src="<c:url value="/resources/image/summary2.png" />"
 						width="329" height="168">
