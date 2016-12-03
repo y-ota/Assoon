@@ -8,4 +8,4 @@ You can use it easily by uploading a text file.
 ![Sample screenshot 1](/readme/screenshot1.png)
 
 ## LICENSE
-ASOQ is open source software and is licensed under the GNU General Public License v3 located in the LICENSE file.
+ASOQ is open source software and is licensed under the GNU General Public License Version 3 located in the LICENSE file.
