@@ -33,7 +33,7 @@
 	<div id="container">
 		<h1>
 			<img src="<c:url value="/resources/image/asoq_logo.png" />"
-				width="100" height="90" class="stepbtn">Assoon<span
+				width="90" height="75" class="stepbtn">Assoon<span
 				class="version">Ver 0.5.0</span>
 		</h1>
 		<div class="top">
@@ -51,11 +51,11 @@
 						</div>
 					</td>
 					<td><input type="button" name="btn-run" id="btn-run"
-						value="Open" /> <input type="file" name="file" id="file" value="" />
+						value="OPEN" /> <input type="file" name="file" id="file" value="" />
 						<input type="submit" name="submit2" id="submit2" value="qaa"
 						style="display: none" /></td>
 					<td><input type="button" name="btn-upload" id="btn-upload"
-						value="Run" /></td>
+						value="RUN" /></td>
 					<td>
 						<Button type="button" id="setting">Setting</Button>
 					</td>

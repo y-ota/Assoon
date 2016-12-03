@@ -55,14 +55,15 @@ public class AssoonController {
 	private static final Logger logger = LoggerFactory.getLogger(AssoonController.class);
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String home(Locale locale, Model model) {
+	public String get(Locale locale, Model model) {
+		logger.info("GET Request");
 		return "asoon";
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public String home(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
+	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
 			String gamma, String[] word, String alpha, String beta, String iter, String topic, Model model) {
-
+		
 		Utility utility = new Utility();
 		// MeCabのパラメータ読み込み
 		String mecabPropPath = request.getRealPath("/WEB-INF/mecab.properties");
