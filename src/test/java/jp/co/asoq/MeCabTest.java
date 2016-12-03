@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import jp.assoon.MeCab;
+
 public class MeCabTest {
 
 	@Test

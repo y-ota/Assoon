@@ -24,6 +24,6 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>appServlet</servlet-name>
-    <url-pattern>/asoq.jsp</url-pattern>
+    <url-pattern>/</url-pattern>
   </servlet-mapping>
 </web-app>
