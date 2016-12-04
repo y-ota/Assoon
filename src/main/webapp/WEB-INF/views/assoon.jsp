@@ -103,10 +103,6 @@
 						<img src="<c:url value="/resources/image/confbtn.png" />"
 							width="35" height="35" class="stepbtn">で必要に応じて設定を変更します。
 					</p>
-
-					<div class="divider_line">&nbsp;</div>
-
-
 				</div>
 			</c:if>
 		</form>
@@ -127,7 +123,7 @@
 		</c:if>
 
 		<div class="footer">
-			<p>© 2016 Yusuke Ota All Rights Reserved.</p>
+			<p>© 2016 assoon.jp All Rights Reserved.</p>
 		</div>
 	</div>
 	<c:if test="${!empty postFlg}">
