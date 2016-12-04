@@ -192,7 +192,7 @@ table {
 	width: 35px;
 }
 
-.setting-form {
+#setting-form {
 	width: 570px;
 	margin: auto;
 	border: 1px solid #f9c510;

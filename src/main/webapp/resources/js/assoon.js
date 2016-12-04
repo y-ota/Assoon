@@ -2,13 +2,13 @@ $(function() {
 	$("#btn-dl").button();
 	// 設定ボタン
 	$("#setting").click(function() {
-		if ($('.setting-form').css('display') == 'block') {
-			$(".setting-form").fadeOut(500);
+		if ($('#setting-form').css('display') == 'block') {
+			$("#setting-form").fadeOut(500);
 		} else {
-			$(".setting-form").fadeIn(500);
+			$("#setting-form").fadeIn(500);
 		}
 	});
-	$(".setting-form").hide();
+	$("#setting-form").hide();
 	// RUNボタン
 	$("#btn-upload").button();
 	$("#btn-upload").click(function() {
@@ -23,7 +23,7 @@ $(function() {
 			});
 		} else {
 			$("#loading2").fadeIn(100);
-			$(".setting-form").fadeOut(800);
+			$("#setting-form").fadeOut(800);
 			// ボタン無効化
 			$("#setting").attr('disabled', true);
 			$("#btn-run").attr('disabled', true);
