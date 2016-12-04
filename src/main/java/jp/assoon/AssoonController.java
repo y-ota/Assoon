@@ -57,7 +57,7 @@ public class AssoonController {
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String get(Locale locale, Model model) {
 		logger.info("GET Request");
-		return "asoon";
+		return "assoon";
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
