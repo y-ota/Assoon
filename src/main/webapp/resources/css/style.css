@@ -22,8 +22,7 @@
 }
 
 h1 {
-	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue",
-		"Helvetica", "Arial", "Verdana", "sans-serif";
+	font-family: "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
 	font-size: 85px;
 	color:#424242;
 	padding: 0px 0;
@@ -197,7 +196,7 @@ table {
 #setting-form {
 	width: 570px;
 	margin: auto;
-	border: 1px solid #F1C40F;
+	border: 1px solid #e74c3c;
 	padding: 19px;
 	min-height: 20px;
 	color: #757575;
@@ -292,6 +291,6 @@ p.version {
 }
 #path {
 	height:41px;
-	border: 1px solid #F1C40F;
+	border: 1px solid #e74c3c;
 	color:#757575;
 }
