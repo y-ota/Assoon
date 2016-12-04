@@ -25,10 +25,12 @@ h1 {
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue",
 		"Helvetica", "Arial", "Verdana", "sans-serif";
 	font-size: 85px;
+	color:#616161;
 	padding: 0px 0;
 	text-align: center;
 	margin-bottom: 0;
 	font-weight: 800;
+	margin-top: 25px;
 }
 
 h2 {
