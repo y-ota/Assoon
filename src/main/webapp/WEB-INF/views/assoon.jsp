@@ -93,7 +93,7 @@
 						RUNを押すと処理が始まり、要約結果が表示されます。
 					</p>
 					<img src="<c:url value="/resources/image/summary2.png" />"
-						width="329" height="168">
+						width="80%" height="80%">
 					<div class="divider_line">&nbsp;</div>
 
 					<div id="step-div">
