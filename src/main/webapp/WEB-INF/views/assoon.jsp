@@ -34,7 +34,6 @@
 		<h1>
 			<img src="<c:url value="/resources/image/asoq_logo.png" />" class="icon">Assoon
 		</h1>
-        <p class="version">Version 0.5.0</p>
 		<div class="top">
 			<p>
 				Assoonは自由記述アンケートの回答を自動的に要約するWebシステムです。<br>
