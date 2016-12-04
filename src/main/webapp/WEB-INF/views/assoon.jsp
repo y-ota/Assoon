@@ -32,10 +32,9 @@
 	<div id="demo"></div>
 	<div id="container">
 		<h1>
-			<img src="<c:url value="/resources/image/asoq_logo.png" />"
-				width="90" height="75" class="stepbtn">Assoon<span
-				class="version">Ver 0.5.0</span>
+			<img src="<c:url value="/resources/image/asoq_logo.png" />" class="icon">Assoon
 		</h1>
+        <p class="version">Version 0.5.0</p>
 		<div class="top">
 			<p>
 				Assoonは自由記述アンケートの回答を自動的に要約するWebシステムです。<br>
@@ -63,7 +62,7 @@
 			</table>
 			<p />
 
-			<div class="setting-form">
+			<div id="setting-form">
 				<input type="checkbox" name="word" value="1" checked="checked">名詞
 				<input type="checkbox" name="word" value="2" id="check">動詞 <input
 					type="checkbox" name="word" value="3" id="check">形容詞 <input
