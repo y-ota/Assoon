@@ -32,9 +32,9 @@
 <body>
 	<div id="demo"></div>
 	<div id="container">
-		<h1>
+		<h1><a href="/assoon/" style="text-decoration:none;">
 			<img src="<c:url value="/resources/image/asoq_logo.png" />" class="icon">Assoon
-		</h1>
+		</a></h1>
 		<div class="top">
 			<p>
 				Assoonは自由記述アンケートの回答を自動的に要約するWebシステムです。<br>

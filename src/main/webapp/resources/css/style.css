@@ -22,6 +22,9 @@
 	
 }
 
+a:link  { color : #424242; }
+a:visited  { color : #424242; }
+
 h1 {
 	font-family: 'Nova Oval', cursive;
 	font-size:105px;
@@ -47,6 +50,7 @@ h4 {
 #path {
 	width: 380px;
 	height: 35px;
+	background-color: #FAFAFA;
 }
 
 body {
