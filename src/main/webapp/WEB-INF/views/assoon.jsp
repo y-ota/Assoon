@@ -20,6 +20,7 @@
 	href="<c:url value="/resources/css/jquery-ui.css" />" />
 <link rel="icon" type="image/png"
 	href="<c:url value="/resources/image/asoq_logo.png" />" sizes="32x32">
+<link href="https://fonts.googleapis.com/css?family=Nova+Oval" rel="stylesheet">
 <script src='<c:url value="/resources/js/d3.js" />'></script>
 <script src='<c:url value="/resources/js/d3.layout.cloud.js" />'></script>
 <script src='<c:url value="/resources/js/wordcloud.js" />'></script>
@@ -73,6 +74,7 @@
 					id="topic" value="10" maxlength='3' required
 					style="font-size: 18px;">
 			</div>
+         
 			<c:if test="${empty postFlg}">
 				<div id="step_container">
 					<div id="step-div">
@@ -119,7 +121,6 @@
 				<tbody id="output"></tbody>
 			</table>
 		</c:if>
-
 		<div class="footer">
 			<p>© 2016 assoon.jp All Rights Reserved.</p>
 		</div>
