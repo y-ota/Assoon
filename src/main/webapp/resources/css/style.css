@@ -179,6 +179,12 @@ table {
 #dialog {
 	display: none;
 }
+#topic_dialog {
+	display: none;
+}
+#word_dialog {
+	display: none;
+}
 
 #alpha, #beta, #topic {
 	background-color:#FAFAFA;
@@ -280,7 +286,7 @@ p {
 #step-div {
 	font-weight: 600;
 	font-size: 30px;
-	margin-top: 2%;
+	margin-top: 0%;
 }
 
 #topicnum {

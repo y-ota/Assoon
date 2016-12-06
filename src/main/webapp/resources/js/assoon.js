@@ -12,6 +12,52 @@ $(function() {
 	// RUNボタン
 	$("#btn-upload").button();
 	$("#btn-upload").click(function() {
+		//チェックされている数を調べる
+		var wordCounter = 0;
+		// 名詞がチェックされているか
+		if($("#check1").prop("checked")){
+			wordCounter++;
+		}
+		if($("#check2").prop("checked")){
+			wordCounter++;
+		}
+		if($("#check3").prop("checked")){
+			wordCounter++;
+		}
+		if($("#check4").prop("checked")){
+			wordCounter++;
+		}
+		if($("#check5").prop("checked")){
+			wordCounter++;
+		}
+		if($("#check6").prop("checked")){
+			wordCounter++;
+		}
+		//チェックされている数が1未満の場合
+		if(wordCounter < 1){
+			$("#word_dialog").dialog({
+				modal : true,
+				buttons : {
+					OK : function() {
+						$(this).dialog("close");
+					}
+				}
+			});
+			return;
+		}
+		// トピック数チェック
+		if (Number($("#topic").val()) > 20) {
+			$("#topic_dialog").dialog({
+				modal : true,
+				buttons : {
+					OK : function() {
+						$(this).dialog("close");
+					}
+				}
+			});
+			return;
+		}
+		//
 		if (document.getElementById("file").value == "") {
 			$("#dialog").dialog({
 				modal : true,
@@ -21,15 +67,17 @@ $(function() {
 					}
 				}
 			});
-		} else {
-			$("#loading2").fadeIn(100);
-			$("#setting-form").fadeOut(800);
-			// ボタン無効化
-			$("#setting").attr('disabled', true);
-			$("#btn-run").attr('disabled', true);
-			$("#btn-upload").attr('disabled', true);
-			$("#submit2").click();
+			return;
 		}
+
+		$("#loading2").fadeIn(100);
+		$("#setting-form").fadeOut(800);
+		// ボタン無効化
+		$("#setting").attr('disabled', true);
+		$("#btn-run").attr('disabled', true);
+		$("#btn-upload").attr('disabled', true);
+		$("#submit2").click();
+
 	});
 	// 変なパス対策
 	$("#file").change(
@@ -42,10 +90,6 @@ $(function() {
 	$("#btn-run").button();
 	$("#btn-run").click(function() {
 		$("#file").click();
-	});
-
-	$("#btn-dl").click(function() {
-		$.get("/ldas/download");
 	});
 
 	$("#setting").button({
@@ -69,4 +113,13 @@ $(function() {
 			increaseArea : '20%'
 		});
 	});
+	
+	//エンターでのsubmit防止
+    $("input").keydown(function(e) {
+        if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+            return false;
+        } else {
+            return true;
+        }
+    })
 });

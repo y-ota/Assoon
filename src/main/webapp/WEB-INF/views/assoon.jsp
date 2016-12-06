@@ -37,7 +37,7 @@
 		</a></h1>
 		<div class="top">
 			<p>
-				Assoonは自由記述アンケートの回答を自動的に要約するWebシステムです。<br>
+				Assoonは自由記述アンケートの回答を自動的に要約するWebアプリです。<br>
 				テキストファイルをアップロードするだけで簡単にご利用できます。
 			</p>
 		</div>
@@ -63,12 +63,12 @@
 			<p />
 
 			<div id="setting-form">
-				<input type="checkbox" name="word" value="1" checked="checked">名詞
-				<input type="checkbox" name="word" value="2" id="check">動詞 <input
-					type="checkbox" name="word" value="3" id="check">形容詞 <input
-					type="checkbox" name="word" value="4" id="check">副詞 <input
-					type="checkbox" name="word" value="5" id="check">助詞 <input
-					type="checkbox" name="word" value="6" id="check">すべての品詞
+				<input type="checkbox" name="word" value="1" id="check1" checked="checked">名詞
+				<input type="checkbox" name="word" value="2" id="check2">動詞 <input
+					type="checkbox" name="word" value="3" id="check3">形容詞 <input
+					type="checkbox" name="word" value="4" id="check4">副詞 <input
+					type="checkbox" name="word" value="5" id="check5">助詞 <input
+					type="checkbox" name="word" value="6" id="check6">すべての品詞
 				<p></p>
 				<label for="topic">トピック数</label> <input type="text" name="topic"
 					id="topic" value="10" maxlength='3' required
@@ -103,6 +103,7 @@
 						<img src="<c:url value="/resources/image/confbtn.png" />"
 							width="35" height="35" class="stepbtn">で必要に応じて設定を変更します。
 					</p>
+					<div class="divider_line">&nbsp;</div>
 				</div>
 			</c:if>
 		</form>
@@ -154,6 +155,12 @@
 	</c:if>
 	<div id="dialog" title="Error">
 		<p>ファイルを選択してください。</p>
+	</div>
+    <div id="topic_dialog" title="Error">
+		<p>トピック数は20以下の整数を指定してください。</p>
+	</div>
+	<div id="word_dialog" title="Error">
+		<p>品詞は1つ以上チェックしてください。</p>
 	</div>
 </body>
 </html>
