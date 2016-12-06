@@ -12,29 +12,13 @@ $(function() {
 	// RUNボタン
 	$("#btn-upload").button();
 	$("#btn-upload").click(function() {
-		//チェックされている数を調べる
-		var wordCounter = 0;
-		// 名詞がチェックされているか
-		if($("#check1").prop("checked")){
-			wordCounter++;
-		}
-		if($("#check2").prop("checked")){
-			wordCounter++;
-		}
-		if($("#check3").prop("checked")){
-			wordCounter++;
-		}
-		if($("#check4").prop("checked")){
-			wordCounter++;
-		}
-		if($("#check5").prop("checked")){
-			wordCounter++;
-		}
-		if($("#check6").prop("checked")){
-			wordCounter++;
-		}
-		//チェックされている数が1未満の場合
-		if(wordCounter < 1){
+		// チェックされている数を調べる
+		var checkedWords = [];
+		$('[name="word"]:checked').each(function() {
+			checkedWords.push($(this).val());
+		});
+		// チェックされている数が1未満の場合
+		if (checkedWords.length < 1) {
 			$("#word_dialog").dialog({
 				modal : true,
 				buttons : {
@@ -113,13 +97,13 @@ $(function() {
 			increaseArea : '20%'
 		});
 	});
-	
-	//エンターでのsubmit防止
-    $("input").keydown(function(e) {
-        if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
-            return false;
-        } else {
-            return true;
-        }
-    })
+
+	// エンターでのsubmit防止
+	$("input").keydown(function(e) {
+		if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+			return false;
+		} else {
+			return true;
+		}
+	})
 });
