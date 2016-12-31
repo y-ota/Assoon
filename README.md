@@ -6,6 +6,7 @@ http://assoon.jp
 
 ## Screenshots
 ![Sample screenshot 1](/readme/screenshot1.png)
+![Sample screenshot 2](/readme/screenshot2.png)
 
 ## LICENSE
 Assoon is open source software and is licensed under the GNU General Public License Version 3 located in the [LICENSE](https://github.com/y-ota/Assoon/blob/master/LICENSE).
