@@ -4,7 +4,7 @@ Assoonは、自由記述アンケートの回答を自動的に要約するた�
 http://assoon.jp
 ## Documentation
 
-## Screen Shot
+## Screenshots
 ![Sample screenshot 1](/readme/screenshot1.png)
 
 ## LICENSE
