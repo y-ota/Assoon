@@ -1,10 +1,10 @@
 # Assoon
-Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。要約には機械学習(Latent Dirichlet Allocation)を利用しています。テキストファイルをアップロードするだけで簡単にご利用できます。
+Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。テキストファイルをアップロードするだけで簡単にご利用できます。
 
-Assoon is an automatic summarizing system for short text such as free discriptive questionnares(only Japanese), using Machine Learning(Latent Dirichlet Allocation). It picks up a small set of opinions which summarize the whole opinions.
-You can use it easily by uploading a text file.
+http://assoon.jp
+## Documentation
 
-## INTERFACE
+## Screen Shot
 ![Sample screenshot 1](/readme/screenshot1.png)
 
 ## LICENSE
