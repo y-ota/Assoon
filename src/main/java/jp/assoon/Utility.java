@@ -262,5 +262,22 @@ public class Utility {
 	public static boolean isWindows() {
 		return OS_NAME.startsWith("windows");
 	}
+	
+	public void deleteDirectory(String dirPath) {
+	    File file = new File(dirPath);
+	    recursiveDeleteFile(file);
+	}
+	
+	private void recursiveDeleteFile(File file) {
+	    if (!file.exists()) {
+	        return;
+	    }
+	    if (file.isDirectory()) {
+	        for (File child : file.listFiles()) {
+	            recursiveDeleteFile(child);
+	        }
+	    }
+	    file.delete();
+	}
 
 }

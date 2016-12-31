@@ -222,6 +222,9 @@ public class AssoonController {
 		model.addAttribute("topicInfo", topicInfoList);
 		model.addAttribute("param", paramaters);
 
+		//userDir削除
+		utility.deleteDirectory(userDir);
+		
 		return "assoon";
 	}
 
