@@ -32,7 +32,7 @@
 <body>
 	<div id="demo"></div>
 	<div id="container">
-		<h1><a href="/assoon/" style="text-decoration:none;">
+		<h1><a href="/" style="text-decoration:none;">
 			<img src="<c:url value="/resources/image/asoq_logo.png" />" class="icon">Assoon
 		</a></h1>
 		<div class="top">
@@ -123,7 +123,7 @@
 			</table>
 		</c:if>
 		<div class="footer">
-			<p>© 2016 assoon.jp All Rights Reserved.</p>
+			<p>© 2016 Assoon.jp All Rights Reserved.</p>
 		</div>
 	</div>
 	<c:if test="${!empty postFlg}">
