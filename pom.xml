@@ -153,6 +153,20 @@
                     <mainClass>org.test.int1.Main</mainClass>
                 </configuration>
             </plugin>
+            <plugin>
+		    <groupId>org.apache.maven.plugins</groupId>
+		    <artifactId>maven-jar-plugin</artifactId>
+		    <configuration>
+		        <archive>
+		            <manifest>
+		                <addClasspath>true</addClasspath>
+		            </manifest>
+		            <manifestEntries>
+		                <Class-Path>src/main/webapp/WEB-INF/lib/args4j-2.0.6.jar</Class-Path>
+		            </manifestEntries>
+		        </archive>
+		    </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
