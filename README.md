@@ -1,5 +1,5 @@
 # Assoon
-Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。テキストファイルをアップロードするだけで簡単にご利用できます。要約には、機械学習(Latent Dirichlet Allocation)を利用しています。
+Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。テキストファイルをアップロードするだけで簡単にご利用できます。要約には、機械学習(LDA:Latent Dirichlet Allocation)を利用しています。
 
 http://assoon.jp
 ## Documentation
