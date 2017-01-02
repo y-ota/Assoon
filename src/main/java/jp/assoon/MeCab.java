@@ -18,8 +18,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -41,6 +44,7 @@ public class MeCab {
 	private List<List<WordInfo>> wordInfoListList = new ArrayList<List<WordInfo>>();
 	private List<String> stopwordList = new ArrayList<String>(); // ストップワード
 	private static String mecabBinPath; // MeCab実行パス
+	private Utility utility = new Utility();
 
 	public List<List<WordInfo>> getWordInfoList() {
 		return wordInfoListList;
@@ -51,8 +55,12 @@ public class MeCab {
 
 		try {
 			// ストップワードファイルを読み込む
-			stopwordList = new Utility()
-					.readText(new InputStreamReader(getClass().getResourceAsStream("stopword.txt"), "UTF-8"));
+			InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
+			if(stopwordStream == null){
+				stopwordList = Collections.emptyList();
+			}else{
+				stopwordList = utility.readText(new InputStreamReader(stopwordStream, "UTF-8"));
+			}
 
 			// MeCabパスの取得
 			Properties properties = new Properties();
@@ -121,7 +129,6 @@ public class MeCab {
 			int wordN = 0;
 
 			List<String> docIdList = new ArrayList<String>();
-			Utility utility = new Utility();
 			// 形態素解析結果を全て解析する
 			while (true) {
 
