@@ -174,13 +174,21 @@ public class MeCab {
 					}
 
 					// 指定して品詞で、かつストップワードでないことかつ
-					// 読みがない場合(*)はリストに追加しない
+					// 一般名詞、固有名詞、サ変接続 のみとし、読みがない場合(*)はリストに追加しない
+					// http://www.unixuser.org/~euske/doc/postag/
 					if ((listHinshi.contains("ALL") || listHinshi.contains(targetType1)) && !stopwordList.contains(word)
 							&& !targetNotChar.equals("*")
-							&& !targetType2.equals("代名詞")
-							&& !targetType2.equals("接尾")
+							&& !targetType2.equals("引用文字列")
+							&& !targetType2.equals("ナイ形容詞語幹")
+							&& !targetType2.equals("形容動詞語幹")
+							&& !targetType2.equals("動詞非自立的")
+							&& !targetType2.equals("副詞可能")
 							&& !targetType2.equals("数")
-							&& !targetType2.equals("副詞可能")) {
+							&& !targetType2.equals("接続詞的")
+							&& !targetType2.equals("接尾")
+							&& !targetType2.equals("代名詞")
+							&& !targetType2.equals("非自立")
+							&& !targetType2.equals("特殊")) {
 						WordInfo wordInfo = new WordInfo();
 						wordInfo.setStartIndex(wordLength);
 						wordInfo.setEndIndex(word.length());
