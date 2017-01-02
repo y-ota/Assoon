@@ -166,7 +166,7 @@ public class MeCab {
 						targetNotChar = matcher.group(4);
 						word = matcher.group(1);
 					} else {
-						throw new RuntimeException(targetLine);
+						continue;
 					}
 
 					// 指定して品詞で、かつストップワードでないことかつ
