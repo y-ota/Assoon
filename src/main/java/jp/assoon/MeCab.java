@@ -114,7 +114,7 @@ public class MeCab {
 			Process ps = Runtime.getRuntime().exec(command);
 
 			// 標準出力
-			BufferedReader bReader_i = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
+			BufferedReader br = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
 
 			// 標準出力を1行ずつ受け取る一時オブジェクト
 			String targetLine;
@@ -133,7 +133,7 @@ public class MeCab {
 			while (true) {
 
 				// 形態素解析結果を1行ずつ受け取る
-				targetLine = bReader_i.readLine();
+				targetLine = br.readLine();
 
 				// 最終行まで解析が完了したらループを抜ける
 				if (targetLine == null) {
@@ -170,7 +170,7 @@ public class MeCab {
 						targetNotChar = matcher.group(4);
 						word = matcher.group(1);
 					} else {
-						throw new RuntimeException();
+						throw new RuntimeException("The line dose not match. :" + targetLine);
 					}
 
 					// 指定して品詞で、かつストップワードでないことかつ
