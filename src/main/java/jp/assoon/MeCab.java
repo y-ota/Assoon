@@ -169,7 +169,11 @@ public class MeCab {
 					// 指定して品詞で、かつストップワードでないことかつ
 					// 読みがない場合(*)はリストに追加しない
 					if ((listHinshi.contains("ALL") || listHinshi.contains(targetType1)) && !stopwordList.contains(word)
-							&& !targetNotChar.equals("*")) {
+							&& !targetNotChar.equals("*")
+							&& !targetType2.equals("代名詞")
+							&& !targetType2.equals("接尾")
+							&& !targetType2.equals("数")
+							&& !targetType2.equals("副詞可能")) {
 						WordInfo wordInfo = new WordInfo();
 						wordInfo.setStartIndex(wordLength);
 						wordInfo.setEndIndex(word.length());
