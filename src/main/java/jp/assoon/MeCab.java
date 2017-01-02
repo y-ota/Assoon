@@ -85,6 +85,10 @@ public class MeCab {
 	}
 
 	public void run(String inputfile, String outputPath, String[] hinshi) {
+		if(!new File(inputfile).exists()){
+			throw new RuntimeException("inputfile does not found.");
+		}
+		
 		try {
 			List<String> listHinshi = new ArrayList<String>();
 			for (String str : hinshi) {
@@ -166,7 +170,7 @@ public class MeCab {
 						targetNotChar = matcher.group(4);
 						word = matcher.group(1);
 					} else {
-						continue;
+						throw new RuntimeException();
 					}
 
 					// 指定して品詞で、かつストップワードでないことかつ
