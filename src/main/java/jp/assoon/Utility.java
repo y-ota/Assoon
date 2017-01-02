@@ -118,8 +118,7 @@ public class Utility {
 		for (String docId : docIdList) {
 			DocProp docProp = new DocProp();
 			docProp.setDocId(idx);
-			docProp.setDoument(docList.get(Integer.parseInt(docId) - 1).replace("\"", "”").replace("'", "\\'")
-					.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋"));
+			docProp.setDoument(replaceHalfEscapeCharToFullEscapeChar(docList.get(Integer.parseInt(docId) - 1)));
 			String[] theta = thetaList.get(idx).split("\t");
 			double[] thetaDouble = new double[theta.length];
 
@@ -132,6 +131,16 @@ public class Utility {
 		}
 
 		return returnList;
+	}
+	
+	/**
+	 * 半角エスケープ文字を全角エスケープ文字に置換する
+	 * @param str 半角エスケープ文字
+	 * @return 全角エスケープ文字
+	 */
+	public String replaceHalfEscapeCharToFullEscapeChar(String str){
+		return str.replace("\"", "”").replace("'", "\\'")
+		.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋");
 	}
 
 	/**

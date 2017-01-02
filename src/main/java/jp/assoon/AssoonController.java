@@ -132,14 +132,11 @@ public class AssoonController {
 									.get(j),
 							scoreMap.get(
 									wordTopicAssignList.get(i).get(j)) + phiMap
-											.get(mecab.getWordInfoList().get(i).get(j).getWord().replace("\"", "”")
-													.replace("'", "‘").replace("\\", "￥").replace("%", "％")
-													.replace("&", "＆").replace("+", "＋"))
+											.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
 											.get(wordTopicAssignList.get(i).get(j)));
 				} else {
 					scoreMap.put(wordTopicAssignList.get(i).get(j), phiMap
-							.get(mecab.getWordInfoList().get(i).get(j).getWord().replace("\"", "”").replace("'", "‘")
-									.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋"))
+							.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
 							.get(wordTopicAssignList.get(i).get(j)));
 				}
 			}
