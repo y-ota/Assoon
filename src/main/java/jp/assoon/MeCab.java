@@ -59,7 +59,7 @@ public class MeCab {
 			try (InputStreamReader is = new InputStreamReader(new FileInputStream(mecabPropPath), "UTF-8")) {
 				properties.load(is);
 			} catch (Exception e) {
-				throw new RuntimeException("mecab.propertiesが見つかりません。");
+				throw new RuntimeException("Not found mecab.properties.");
 			}
 			// OSによって取得するパスを変更する
 			if (Utility.isWindows()) {
@@ -72,7 +72,7 @@ public class MeCab {
 
 			// Mecabの実行パスが存在するか
 			if (!new File(mecabBinPath).exists()) {
-				throw new RuntimeException("MeCabの実行パスが存在しません。mecab.propertiesの設定を見直してください。");
+				throw new RuntimeException("Invalid meCab execution path. Please set the value in mecab.properties correctly.");
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -121,6 +121,7 @@ public class MeCab {
 			int wordN = 0;
 
 			List<String> docIdList = new ArrayList<String>();
+			Utility utility = new Utility();
 			// 形態素解析結果を全て解析する
 			while (true) {
 
@@ -141,7 +142,7 @@ public class MeCab {
 						wordInfoListList.add(wordInfoList);
 
 					} else {
-						System.out.println("空行のためスキップします 行番号:" + docId);
+						System.out.println("skip row number:" + docId);
 					}
 					wordN = 0;
 					wordLength = 0;
@@ -151,30 +152,32 @@ public class MeCab {
 				} else {
 					String targetType1 = "";
 					String targetType2 = "";
+					String targetNotChar = "";
 					String word = "";
-					Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),.+");
+					Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),[^,]+,[^,]+,[^,]+,[^,]+,([^,]+)");
 					Matcher matcher = targetTypePattern.matcher(targetLine);
 					if (matcher.find()) {
+						// 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
 						targetType1 = matcher.group(2);
 						targetType2 = matcher.group(3);
+						targetNotChar = matcher.group(4);
 						word = matcher.group(1);
 					} else {
 						throw new RuntimeException();
 					}
 
-					// 指定して品詞で、かつストップワードでないこと
-					// 名詞でかつサ変接続じゃないこと
+					// 指定して品詞で、かつストップワードでないことかつ
+					// 読みがない場合(*)はリストに追加しない
 					if ((listHinshi.contains("ALL") || listHinshi.contains(targetType1)) && !stopwordList.contains(word)
-							&& !(targetType1.equals("名詞") && targetType2.equals("サ変接続"))) {
+							&& !targetNotChar.equals("*")) {
 						WordInfo wordInfo = new WordInfo();
 						wordInfo.setStartIndex(wordLength);
 						wordInfo.setEndIndex(word.length());
 						wordInfo.setWord(word);
 						wordInfoList.add(wordInfo);
 
-						// エスケープ文字は前買うに置換
-						sb.append(word.replace("\"", "”").replace("'", "‘").replace("\\", "￥").replace("%", "％")
-								.replace("&", "＆").replace("+", "＋") + " ");
+						// 半角エスケープ文字を全角に置換
+						sb.append(utility.replaceHalfEscapeCharToFullEscapeChar(word) + " ");
 						wordN++;
 					}
 					wordLength += word.length();
@@ -183,7 +186,6 @@ public class MeCab {
 			// 文書数を１行目にセット
 			list.set(0, String.valueOf(doccnt));
 			ps.waitFor();
-			Utility utility = new Utility();
 			utility.write(list, outputPath);
 			utility.write(docIdList, outputPath + Constants.SPACE_SEP_FILE_DOC_ID);
 		} catch (Exception e) {

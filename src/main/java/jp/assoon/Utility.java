@@ -18,9 +18,11 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -80,7 +82,7 @@ public class Utility {
 
 	public void write(List<String> list, String outputPath) {
 		try {
-			BufferedWriter bw = new BufferedWriter(new FileWriter(new File(outputPath)));
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputPath)),"UTF-8"));
 			for (String line : list) {
 				bw.write(line);
 				bw.newLine();
