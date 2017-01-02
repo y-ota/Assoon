@@ -19,7 +19,7 @@
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 		<multipart-config>
-			<location>/tmp</location>
+			<location>/</location>
 			<max-file-size>999999999999</max-file-size>
 			<max-request-size>100000000</max-request-size>
 			<file-size-threshold>10000000</file-size-threshold>

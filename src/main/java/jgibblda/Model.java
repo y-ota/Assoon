@@ -275,7 +275,7 @@ public class Model {
 		int i, j;
 		
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			
 			//write docs with topic assignments for words
 			for (i = 0; i < data.M; i++){
@@ -284,7 +284,7 @@ public class Model {
 					writer.write(data.docs[i].words[j] + ":" + z[i].get(j) + " ");	
 					//writer.write(data.localDict.id2word.get(data.docs[i].words[j]) + ":" + z[i].get(j) + " ");	
 				}
-				writer.write("\n");
+				writer.newLine();
 			}
 				
 			writer.close();
@@ -302,13 +302,13 @@ public class Model {
 	 */
 	public boolean saveModelTheta(String filename){
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			for (int i = 0; i < M; i++){
 				for (int j = 0; j < K; j++){
 					//writer.write(theta[i][j] + " ");
 					writer.write(theta[i][j] + "\t");
 				}
-				writer.write("\n");
+				writer.newLine();
 			}
 			writer.close();
 		}
@@ -326,20 +326,20 @@ public class Model {
 	
 	public boolean saveModelPhi(String filename){
 		try {
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			//Add title 20150701
 			for(int i =0;i<V;i++){
 				String word = data.localDict.id2word.get(i);
 				writer.write(word.replace("//"," //").replace("\"", " \"").replace("\'", " \'")  + "\t");
 			}
-			writer.write("\n");
+			writer.newLine();
 			
 			for (int i = 0; i < K; i++){
 				for (int j = 0; j < V; j++){
 					writer.write(phi[i][j] + "\t");
 					//writer.write(phi[i][j] + " ");
 				}
-				writer.write("\n");
+				writer.newLine();
 			}
 			writer.close();
 		}
@@ -356,7 +356,7 @@ public class Model {
 	 */
 	public boolean saveModelOthers(String filename){
 		try{
-			BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(filename),"UTF-8"));
 			
 			writer.write("alpha=" + alpha + "\n");
 			writer.write("beta=" + beta + "\n");
