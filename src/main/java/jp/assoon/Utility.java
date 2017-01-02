@@ -198,10 +198,10 @@ public class Utility {
 	 * @param before
 	 * @param after
 	 */
-	public void replaceTextFile(String filePath, String before, String after) {
+	public void replaceHalfSpaceInTextFile(String filePath) {
 		List<String> fileList = readText(filePath);
 		for (int i = 0; i < fileList.size(); i++) {
-			fileList.set(i, fileList.get(i).replace(before, after));
+			fileList.set(i, fileList.get(i).replace(" " , "　"));
 		}
 		write(fileList, filePath);
 	}

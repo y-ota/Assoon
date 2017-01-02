@@ -60,6 +60,7 @@ public class AssoonController {
 		return "assoon";
 	}
 
+	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
 			String gamma, String[] word, String alpha, String beta, String iter, String topic, Model model) {
@@ -102,7 +103,7 @@ public class AssoonController {
 		iter = String.valueOf(Integer.parseInt(iter) + 1);
 
 		// ファイルの中身の半角スペースを全角スペースに置換
-		utility.replaceTextFile(userDir + "/" + Constants.POST_FILE, " ", "　");
+		utility.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
 		// 形態素解析
 		mecab.run(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
 		// LDA実行
