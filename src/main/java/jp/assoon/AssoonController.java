@@ -30,10 +30,12 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -53,6 +55,8 @@ import jgibblda.LDA;
 @Controller
 public class AssoonController {
 	private static final Logger logger = LoggerFactory.getLogger(AssoonController.class);
+	@Autowired
+    private ServletContext context; 
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String get(Locale locale, Model model) {
@@ -60,18 +64,17 @@ public class AssoonController {
 		return "assoon";
 	}
 
-	@SuppressWarnings("deprecation")
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
 			String gamma, String[] word, String alpha, String beta, String iter, String topic, Model model) {
 		
 		Utility utility = new Utility();
 		// MeCabのパラメータ読み込み
-		String mecabPropPath = request.getRealPath("/WEB-INF/mecab.properties");
+		String mecabPropPath = context.getRealPath("/WEB-INF/mecab.properties");
 		MeCab mecab = new MeCab(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
 
 		// LDAのパラメータを読み込む
-		String ldaPropPath = request.getRealPath("/WEB-INF/lda.properties");
+		String ldaPropPath = context.getRealPath("/WEB-INF/lda.properties");
 		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(ldaPropPath), "UTF-8")) {
 			Properties properties = new Properties();
 			properties.load(isr);
@@ -84,7 +87,7 @@ public class AssoonController {
 
 		// Data
 		String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Timestamp(System.currentTimeMillis()));
-		String data = request.getRealPath("/WEB-INF/data");
+		String data = context.getRealPath("/WEB-INF/data");
 		String userDir = data + "/" + timestamp;
 
 		// データを格納するディレクトリ生成
