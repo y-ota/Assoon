@@ -108,5 +108,14 @@ public class MeCabTest {
 		List<String> outputFileList = utility.readText(outputFilePath);
 		Assert.assertThat(correctList, equalTo(outputFileList));
 	}
+	
+	//if the hinshi list is invalid
+	@Test(expected=IllegalArgumentException.class)
+	public void doMeCabInnInvalidHinshiList() {
+		//8を入れてエラーを出す
+		String[] hinshi = {"1","8"};
+		TestFileCreater.createEmptyFile(inputFilePath);
+		mecab.run(inputFilePath, outputFilePath, hinshi);
+	}
 
 }

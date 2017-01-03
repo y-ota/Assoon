@@ -38,8 +38,10 @@ public class MeCab {
 	// 1文書あたりの単語数
 	private int nword;
 	private List<List<WordInfo>> wordInfoListList = new ArrayList<List<WordInfo>>();
-	private List<String> stopwordList = new ArrayList<String>(); // ストップワード
-	private static String mecabBinPath; // MeCab実行パス
+	// ストップワード
+	private List<String> stopwordList; 
+	// MeCab実行パス
+	private static String mecabBinPath; 
 	private Utility utility = new Utility();
 
 	public List<List<WordInfo>> getWordInfoList() {
@@ -85,54 +87,52 @@ public class MeCab {
 	}
 
 	public void run(String inputfile, String outputPath, String[] hinshi) {
+		//入力ファイルが正しいかチェック
 		if(!new File(inputfile).exists()){
 			throw new IllegalArgumentException("Inputfile does not found.");
 		}
 		
-		try {
-			List<String> listHinshi = new ArrayList<String>();
-			for (String str : hinshi) {
-				if ("1".equals(str)) {
-					listHinshi.add("名詞");
-				} else if ("2".equals(str)) {
-					listHinshi.add("動詞");
-				} else if ("3".equals(str)) {
-					listHinshi.add("形容詞");
-				} else if ("4".equals(str)) {
-					listHinshi.add("副詞");
-				} else if ("5".equals(str)) {
-					listHinshi.add("助詞");
-				} else if ("6".equals(str)) {
-					listHinshi.add("ALL");
-				}
+		//解析対象の品詞をマッピングする
+		List<String> listHinshi = new ArrayList<String>();
+		for (String str : hinshi) {
+			if ("1".equals(str)) {
+				listHinshi.add("名詞");
+			} else if ("2".equals(str)) {
+				listHinshi.add("動詞");
+			} else if ("3".equals(str)) {
+				listHinshi.add("形容詞");
+			} else if ("4".equals(str)) {
+				listHinshi.add("副詞");
+			} else {
+				throw new IllegalArgumentException();
 			}
-
-			// DOSに投げるコマンドと引数を指定する
-			String[] command = { mecabBinPath, inputfile };
-			Process ps = Runtime.getRuntime().exec(command);
-			BufferedReader br = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
-			
-			String targetLine;
+		}
+		
+		//MeCab実行
+		BufferedReader br = null;
+		Process ps = null;
+		try {
 			List<String> list = new ArrayList<String>();
+			List<WordInfo> wordInfoList = new ArrayList<>();
+			List<String> docIdList = new ArrayList<String>();
 			list.add("0");
 			StringBuilder sb = new StringBuilder();
-			List<WordInfo> wordInfoList = new ArrayList<>();
 			int doccnt = 0;
 			int docId = 0;
 			int wordLength = 0;
 			int wordN = 0;
 
-			List<String> docIdList = new ArrayList<String>();
+			// DOSに投げるコマンドと引数を指定する
+			String[] command = { mecabBinPath, inputfile };
+			ps = Runtime.getRuntime().exec(command);
+			br = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
+			String targetLine;
+
 			// 形態素解析結果を全て解析する
-			while (true) {
+			while ((targetLine = br.readLine())!=null) {
 
-				// 形態素解析結果を1行ずつ受け取る
-				targetLine = br.readLine();
-
-				// 最終行まで解析が完了したらループを抜ける
-				if (targetLine == null) {
-					break;
-				} else if (targetLine.equals("EOS")) {
+				// 1文書の解析の終わりの場合
+				if (targetLine.equals("EOS")) {
 					docId++;
 					// 末尾のスペース削除
 					if (sb.length() > 0 && wordN >= this.nword) {
@@ -150,6 +150,8 @@ public class MeCab {
 					sb = new StringBuilder();
 					wordInfoList = new ArrayList<>();
 					continue;
+
+					// 形態素解析の列(例： 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン)を処理する
 				} else {
 					String targetType1;
 					String targetType2;
@@ -169,20 +171,11 @@ public class MeCab {
 
 					// 指定して品詞で、かつストップワードでないことかつ
 					// 一般名詞、固有名詞、サ変接続 のみとし、読みがない場合(*)はリストに追加しない
-					// http://www.unixuser.org/~euske/doc/postag/
-					if ((listHinshi.contains("ALL") || listHinshi.contains(targetType1)) && !stopwordList.contains(word)
-							&& !targetEnd.equals("*")
-							&& !targetType2.equals("引用文字列")
-							&& !targetType2.equals("ナイ形容詞語幹")
-							&& !targetType2.equals("形容動詞語幹")
-							&& !targetType2.equals("動詞非自立的")
-							&& !targetType2.equals("副詞可能")
-							&& !targetType2.equals("数")
-							&& !targetType2.equals("接続詞的")
-							&& !targetType2.equals("接尾")
-							&& !targetType2.equals("代名詞")
-							&& !targetType2.equals("非自立")
-							&& !targetType2.equals("特殊")) {
+					// 参考：http://www.unixuser.org/~euske/doc/postag/
+					if (listHinshi.contains(targetType1) 
+							&& !stopwordList.contains(word)
+							&& !targetEnd.equals("*") 
+							&& (targetType2.equals("一般") || targetType2.equals("固有名詞") || targetType2.equals("サ変接続"))) {
 						WordInfo wordInfo = new WordInfo();
 						wordInfo.setStartIndex(wordLength);
 						wordInfo.setEndIndex(word.length());
@@ -201,9 +194,21 @@ public class MeCab {
 			ps.waitFor();
 			utility.write(list, outputPath);
 			utility.write(docIdList, outputPath + Constants.SPACE_SEP_FILE_DOC_ID);
-			
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+
+		} finally {
+			if(br!=null){
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(ps!=null){
+				ps.destroy();
+			}
 		}
 	}
 
