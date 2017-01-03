@@ -66,9 +66,7 @@
 				<input type="checkbox" name="word" value="1" id="check1" checked="checked">名詞
 				<input type="checkbox" name="word" value="2" id="check2">動詞 <input
 					type="checkbox" name="word" value="3" id="check3">形容詞 <input
-					type="checkbox" name="word" value="4" id="check4">副詞 <input
-					type="checkbox" name="word" value="5" id="check5">助詞 <input
-					type="checkbox" name="word" value="6" id="check6">すべての品詞
+					type="checkbox" name="word" value="4" id="check4">副詞
 				<p></p>
 				<label for="topic">トピック数</label> <input type="text" name="topic"
 					id="topic" value="10" maxlength='3' required
