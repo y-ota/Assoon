@@ -32,10 +32,12 @@ import java.util.TreeMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
@@ -58,6 +60,17 @@ public class AssoonController {
 	@Autowired
     private ServletContext context; 
 
+    @RequestMapping("/sample")
+    public void downloadSampleFile(HttpServletResponse res) throws IOException {
+    	logger.info("Download sample file");
+    	String sampleFilePath = context.getRealPath("/WEB-INF/sample.txt");
+        File file = new File(sampleFilePath);
+        res.setContentLength((int) file.length());
+        res.setContentType(MediaType.TEXT_PLAIN_VALUE);
+        res.setHeader("Content-Disposition", "attachment; filename=\"sample.txt\"");
+        FileCopyUtils.copy(new FileInputStream(file), res.getOutputStream());
+    }
+	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String get(Locale locale, Model model) {
 		logger.info("GET Request");
@@ -68,6 +81,7 @@ public class AssoonController {
 	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
 			String gamma, String[] word, String alpha, String beta, String iter, String topic, Model model) {
 		
+		logger.info("POST Request");
 		Utility utility = new Utility();
 		// MeCabのパラメータ読み込み
 		String mecabPropPath = context.getRealPath("/WEB-INF/mecab.properties");

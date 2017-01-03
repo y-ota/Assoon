@@ -32,7 +32,7 @@
 <body>
 	<div id="demo"></div>
 	<div id="container">
-		<h1><a href="/" style="text-decoration:none;">
+		<h1><a href="./" style="text-decoration:none;">
 			<img src="<c:url value="/resources/image/asoq_logo.png" />" class="icon">Assoon
 		</a></h1>
 		<div class="top">
@@ -80,7 +80,7 @@
 					</div>
 					<p>
 						OPENを押してテキストファイルを選択します。<br>
-						テキストファイルの形式は、<span style="text-decoration: underline">1行につき1意見</span>です。
+						テキストファイルの形式は、1行につき1意見です。(サンプルファイル:<a href="./sample">ダウンロード</a>)
 					</p>
 					<div class="divider_line">&nbsp;</div>
 
