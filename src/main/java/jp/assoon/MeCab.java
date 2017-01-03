@@ -86,7 +86,7 @@ public class MeCab {
 
 	public void run(String inputfile, String outputPath, String[] hinshi) {
 		if(!new File(inputfile).exists()){
-			throw new RuntimeException("inputfile does not found.");
+			throw new IllegalArgumentException("Inputfile does not found.");
 		}
 		
 		try {
@@ -109,16 +109,10 @@ public class MeCab {
 
 			// DOSに投げるコマンドと引数を指定する
 			String[] command = { mecabBinPath, inputfile };
-
-			// コマンド結果をProcessで受け取る
 			Process ps = Runtime.getRuntime().exec(command);
-
-			// 標準出力
 			BufferedReader br = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
-
-			// 標準出力を1行ずつ受け取る一時オブジェクト
+			
 			String targetLine;
-
 			List<String> list = new ArrayList<String>();
 			list.add("0");
 			StringBuilder sb = new StringBuilder();
@@ -157,18 +151,18 @@ public class MeCab {
 					wordInfoList = new ArrayList<>();
 					continue;
 				} else {
-					String targetType1 = "";
-					String targetType2 = "";
-					String targetNotChar = "";
+					String targetType1;
+					String targetType2;
+					String targetEnd;
 					String word = "";
+					// 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
 					Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),[^,]+,[^,]+,[^,]+,[^,]+,([^,]+)");
 					Matcher matcher = targetTypePattern.matcher(targetLine);
 					if (matcher.find()) {
-						// 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
+						word = matcher.group(1);
 						targetType1 = matcher.group(2);
 						targetType2 = matcher.group(3);
-						targetNotChar = matcher.group(4);
-						word = matcher.group(1);
+						targetEnd = matcher.group(4);
 					} else {
 						throw new RuntimeException("The line dose not match. :" + targetLine);
 					}
@@ -177,7 +171,7 @@ public class MeCab {
 					// 一般名詞、固有名詞、サ変接続 のみとし、読みがない場合(*)はリストに追加しない
 					// http://www.unixuser.org/~euske/doc/postag/
 					if ((listHinshi.contains("ALL") || listHinshi.contains(targetType1)) && !stopwordList.contains(word)
-							&& !targetNotChar.equals("*")
+							&& !targetEnd.equals("*")
 							&& !targetType2.equals("引用文字列")
 							&& !targetType2.equals("ナイ形容詞語幹")
 							&& !targetType2.equals("形容動詞語幹")
@@ -207,6 +201,7 @@ public class MeCab {
 			ps.waitFor();
 			utility.write(list, outputPath);
 			utility.write(docIdList, outputPath + Constants.SPACE_SEP_FILE_DOC_ID);
+			
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
