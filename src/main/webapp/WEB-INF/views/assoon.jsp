@@ -106,6 +106,7 @@
 					<p></p>
 					<p><span id="demo_text">DEMOを押して、Assoonを試してみましょう。</span><br>データ提供元：<a href="http://mamapro.jp/posttree/">日本財団ママプロ</a></p>
 					<input type="button" name="btn-demo" id="btn-demo" value="DEMO" />
+                    <input type="text" name="demoval" id="demoval" style="display: none" />
 					</div>
 				</div>
 			</c:if>
@@ -119,7 +120,6 @@
 				<img src="<c:url value="/resources/image/load.gif" />">
 			</div>
 			<div id="summary-div">SUMMARY</div>
-			<!-- <div id="summary"><p>トピックの特徴を考慮した要約です。</p></div> -->
 			<table class="bordered">
 
 				<tbody id="output"></tbody>

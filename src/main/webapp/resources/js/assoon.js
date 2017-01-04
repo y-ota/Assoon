@@ -1,5 +1,23 @@
 $(function() {
+	// ボタン無効化
+	function disableButtons() {
+		$("#setting").attr('disabled', true);
+		$("#btn-run").attr('disabled', true);
+		$("#btn-upload").attr('disabled', true);
+		$("#btn-demo").attr('disabled', true);		
+	}
+	
+	//DEMOボタン
 	$("#btn-demo").button();
+	$("#btn-demo").click(function() {
+		$('#demoval').val("demo");
+		$("#loading2").fadeIn(100);
+		$("#setting-form").fadeOut(800);
+		// ボタン無効化
+		disableButtons();
+		$("#submit2").click();
+	});
+	
 	$("#btn-dl").button();
 	// 設定ボタン
 	$("#setting").click(function() {
@@ -58,9 +76,7 @@ $(function() {
 		$("#loading2").fadeIn(100);
 		$("#setting-form").fadeOut(800);
 		// ボタン無効化
-		$("#setting").attr('disabled', true);
-		$("#btn-run").attr('disabled', true);
-		$("#btn-upload").attr('disabled', true);
+		disableButtons();
 		$("#submit2").click();
 
 	});

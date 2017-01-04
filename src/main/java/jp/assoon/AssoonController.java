@@ -87,7 +87,7 @@ public class AssoonController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, String[] word, String topic, Model model) {
+	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, String[] word, String topic, String demoval, Model model) {
 		logger.info("POST Request");
 		
 		this.topic = topic;
@@ -115,8 +115,14 @@ public class AssoonController {
 		}
 		// クライアントから送られたファイルをコピーする
 		try {
-			FileOutputStream out = new FileOutputStream(new File(userDir + "/" + Constants.POST_FILE));
-			FileCopyUtils.copy(file.getInputStream(), out);
+			if("demo".equals(demoval)){
+				FileOutputStream out = new FileOutputStream(new File(userDir + "/" + Constants.POST_FILE));
+				FileInputStream inputStream = new FileInputStream(webInfPath + "/sampleForDemo.txt");
+				FileCopyUtils.copy(inputStream, out);				
+			}else{
+				FileOutputStream out = new FileOutputStream(new File(userDir + "/" + Constants.POST_FILE));
+				FileCopyUtils.copy(file.getInputStream(), out);
+			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

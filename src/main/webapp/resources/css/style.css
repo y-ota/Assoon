@@ -48,9 +48,7 @@ h4 {
 }
 
 #path {
-	width: 380px;
-	height: 35px;
-	background-color: #FAFAFA;
+
 }
 
 body {
@@ -234,9 +232,9 @@ table {
 	text-align: center;
 }
 
-#setting, #btn-upload, #btn-run. #btn-demo {
+#setting, #btn-upload, #btn-run, #btn-demo {
 	color:#ffffff;
-	height: 45px;
+	height: 43px;
 }
 #demo_text {
 	font-size:19px;
@@ -311,6 +309,8 @@ p.version {
 	text-align: center
 }
 #path {
+	width: 380px;
+	background-color: #FAFAFA;
 	height:39px;
 	border: 1px solid #e74c3c;
 	color:#757575;
