@@ -234,10 +234,17 @@ table {
 	text-align: center;
 }
 
-#setting, #btn-upload, #btn-run {
+#setting, #btn-upload, #btn-run. #btn-demo {
 	color:#ffffff;
 	height: 45px;
 }
+#btn-demo {
+	width: 300px;
+}
+#demo {
+	text-align: center;
+}
+
 #btn-run {
 	margin-left: 3px;
 }

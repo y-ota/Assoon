@@ -1,4 +1,5 @@
 $(function() {
+	$("#btn-demo").button();
 	$("#btn-dl").button();
 	// 設定ボタン
 	$("#setting").click(function() {

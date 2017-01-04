@@ -80,7 +80,7 @@
 					</div>
 					<p>
 						OPENを押してテキストファイルを選択します。<br>
-						テキストファイルの形式は、1行につき1意見です。(サンプルファイル:<a href="./sample">ダウンロード</a>)
+						テキストファイルの形式は、1行につき1意見です。(サンプルファイル：<a href="./sample">ダウンロード</a>)
 					</p>
 					<div class="divider_line">&nbsp;</div>
 
@@ -101,7 +101,13 @@
 						<img src="<c:url value="/resources/image/confbtn.png" />"
 							width="35" height="35" class="stepbtn">で必要に応じて設定を変更します。
 					</p>
+					<div id="demo">
 					<div class="divider_line">&nbsp;</div>
+					<p></p>
+					<p></p>
+					<p>DEMOを押して、Assoonを試してみましょう。(データ提供元：<a href="http://mamapro.jp/posttree/">日本財団ママプロ</a>)</p>
+					<input type="button" name="btn-demo" id="btn-demo" value="DEMO" />
+					</div>
 				</div>
 			</c:if>
 		</form>
@@ -121,7 +127,7 @@
 			</table>
 		</c:if>
 		<div class="footer">
-			<p>© 2016 Assoon.jp All Rights Reserved.</p>
+			<p>© 2016-2017 Assoon.jp All Rights Reserved.</p>
 		</div>
 	</div>
 	<c:if test="${!empty postFlg}">
