@@ -1,4 +1,3 @@
-<%@page import="jp.assoon.Paramaters"%>
 <%@page import="jp.assoon.TopicInfo"%>
 <%@page import="jp.assoon.WordProp"%>
 <%@page import="java.util.List"%>
@@ -105,7 +104,7 @@
 					<div class="divider_line">&nbsp;</div>
 					<p></p>
 					<p></p>
-					<p>DEMOを押して、Assoonを試してみましょう。(データ提供元：<a href="http://mamapro.jp/posttree/">日本財団ママプロ</a>)</p>
+					<p><span id="demo_text">DEMOを押して、Assoonを試してみましょう。</span><br>データ提供元：<a href="http://mamapro.jp/posttree/">日本財団ママプロ</a></p>
 					<input type="button" name="btn-demo" id="btn-demo" value="DEMO" />
 					</div>
 				</div>

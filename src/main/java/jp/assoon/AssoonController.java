@@ -59,6 +59,15 @@ public class AssoonController {
 	private static final Logger logger = LoggerFactory.getLogger(AssoonController.class);
 	@Autowired
     private ServletContext context; 
+	private String webInfPath;
+	private String mecabPropPath;
+	
+	private String alpha;
+	private String beta;
+	private String iter;
+	private String topic;
+	
+	private Utility utility = new Utility();
 
     @RequestMapping("/sample")
     public void downloadSampleFile(HttpServletResponse res) throws IOException {
@@ -78,17 +87,16 @@ public class AssoonController {
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
-	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, boolean wordcheck,
-			String gamma, String[] word, String alpha, String beta, String iter, String topic, Model model) {
-		
+	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, String[] word, String topic, Model model) {
 		logger.info("POST Request");
-		Utility utility = new Utility();
-		// MeCabのパラメータ読み込み
-		String mecabPropPath = context.getRealPath("/WEB-INF/mecab.properties");
-		MeCab mecab = new MeCab(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
-
-		// LDAのパラメータを読み込む
-		String ldaPropPath = context.getRealPath("/WEB-INF/lda.properties");
+		
+		this.topic = topic;
+		// WEB-INFパス
+		webInfPath = context.getRealPath("/WEB-INF");
+		// MeCabのプロパティファイル
+		mecabPropPath = webInfPath + "/mecab.properties";
+		// LDAのプロパティファイル
+		String ldaPropPath = webInfPath + "/lda.properties";
 		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(ldaPropPath), "UTF-8")) {
 			Properties properties = new Properties();
 			properties.load(isr);
@@ -98,13 +106,10 @@ public class AssoonController {
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
-
-		// Data
-		String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Timestamp(System.currentTimeMillis()));
-		String data = context.getRealPath("/WEB-INF/data");
-		String userDir = data + "/" + timestamp;
-
+		
 		// データを格納するディレクトリ生成
+		String timestamp = new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Timestamp(System.currentTimeMillis()));
+		String userDir =  webInfPath + "/data/" + timestamp;
 		if (!new File(userDir).mkdirs()) {
 			throw new RuntimeException("ディレクトリが既に存在します");
 		}
@@ -121,8 +126,25 @@ public class AssoonController {
 
 		// ファイルの中身の半角スペースを全角スペースに置換
 		utility.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
+		
 		// 形態素解析
+		MeCab mecab = new MeCab(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
 		mecab.run(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
+		
+		//LDA 実行
+		List<TopicInfo>topicInfoList = executeLDA(mecab,userDir);
+		
+		// 解析の詳細をクライアントに送る
+		model.addAttribute("postFlg", true);
+		model.addAttribute("topicInfo", topicInfoList);
+
+		//userDir削除
+		utility.deleteDirectory(userDir);
+		
+		return "assoon";
+	}
+	
+	private List<TopicInfo> executeLDA(MeCab mecab, String userDir){
 		// LDA実行
 		LDA.main(new String[] { "-est", "-alpha", alpha, "-beta", beta, "-ntopics", topic, "-niters", iter, "-twords",
 				"20", "-dfile", Constants.SPACE_SEP_FILE, "-dir", userDir + "/", "-savestep", "10000" });
@@ -220,27 +242,8 @@ public class AssoonController {
 		}
 
 		Collections.sort(topicInfoList, new TopicInfoComparator(TopicInfoComparator.DESC));
-
-		// 解析の詳細を送る
-		List<String> others = utility.readText(userDir + "/model-final.others");
-		Paramaters paramaters = new Paramaters();
-		paramaters.setAlpha(others.get(0).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setBeta(others.get(1).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setNtopics(others.get(2).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setNdocs(others.get(3).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setNwords(others.get(4).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setLiters(others.get(5).replaceAll("^[^=]+=(.+)", "$1"));
-		paramaters.setPerplexity(others.get(6).replaceAll("^[^=]+=(.+)", "$1"));
-
-		model.addAttribute("postFlg", true);
-		model.addAttribute("topic", topicNum);
-		model.addAttribute("topicInfo", topicInfoList);
-		model.addAttribute("param", paramaters);
-
-		//userDir削除
-		utility.deleteDirectory(userDir);
 		
-		return "assoon";
+		return topicInfoList;
 	}
 
 }
