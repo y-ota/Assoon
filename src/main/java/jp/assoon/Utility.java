@@ -23,17 +23,24 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class Utility {
 	public List<String> readText(InputStreamReader is) {
 		List<String> list = new ArrayList<String>();
 		BufferedReader br = null;
 		String line = null;
-
 		try {
 			br = new BufferedReader(is);
 			while ((line = br.readLine()) != null) {
@@ -82,23 +89,15 @@ public class Utility {
 
 	public void write(List<String> list, String outputPath) {
 		try {
-			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File(outputPath)),"UTF-8"));
-			for (String line : list) {
-				bw.write(line);
-				bw.newLine();
-			}
-			bw.close();
-
+			Files.write(Paths.get(outputPath), list, StandardCharsets.UTF_8);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public List<WordProp> fileToWordProp(String path) {
 		List<String> list = readText(path);
 		List<WordProp> returnList = new ArrayList<>();
-		// for(String line:list){
 		for (int i = 0; i < 20; i++) {
 			WordProp wordProp = new WordProp();
 			String[] items = list.get(i).split(",");
@@ -201,10 +200,7 @@ public class Utility {
 	 * @param after
 	 */
 	public void replaceHalfSpaceInTextFile(String filePath) {
-		List<String> fileList = readText(filePath);
-		for (int i = 0; i < fileList.size(); i++) {
-			fileList.set(i, fileList.get(i).replace(" " , "　"));
-		}
+		List<String> fileList = readText(filePath).stream().map(a->a.replace(" ", "　")).collect(Collectors.toList());
 		write(fileList, filePath);
 	}
 
@@ -284,9 +280,7 @@ public class Utility {
 	        return;
 	    }
 	    if (file.isDirectory()) {
-	        for (File child : file.listFiles()) {
-	            recursiveDeleteFile(child);
-	        }
+	    	Arrays.stream(file.listFiles()).forEach(a->recursiveDeleteFile(a));
 	    }
 	    file.delete();
 	}

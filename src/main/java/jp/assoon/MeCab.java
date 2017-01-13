@@ -21,11 +21,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * MeCab
@@ -93,20 +95,19 @@ public class MeCab {
 		}
 		
 		//解析対象の品詞をマッピングする
-		List<String> listHinshi = new ArrayList<String>();
-		for (String str : hinshi) {
+		List<String> listHinshi = Arrays.stream(hinshi).map(str-> {
 			if ("1".equals(str)) {
-				listHinshi.add("名詞");
+				return "名詞";
 			} else if ("2".equals(str)) {
-				listHinshi.add("動詞");
+				return "動詞";
 			} else if ("3".equals(str)) {
-				listHinshi.add("形容詞");
+				return "形容詞";
 			} else if ("4".equals(str)) {
-				listHinshi.add("副詞");
+				return "副詞";
 			} else {
 				throw new IllegalArgumentException();
 			}
-		}
+		}).collect(Collectors.toList());
 		
 		//MeCab実行
 		BufferedReader br = null;
