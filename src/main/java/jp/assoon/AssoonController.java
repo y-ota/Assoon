@@ -29,6 +29,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -247,9 +248,7 @@ public class AssoonController {
 			topicInfoList.add(topicInfo);
 		}
 
-		Collections.sort(topicInfoList, new TopicInfoComparator(TopicInfoComparator.DESC));
-		
-		return topicInfoList;
+		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
 	}
 
 }

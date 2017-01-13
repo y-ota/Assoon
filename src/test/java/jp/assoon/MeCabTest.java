@@ -126,8 +126,7 @@ public class MeCabTest {
 	
 	@Test(expected=RuntimeException.class)
 	public void testInvalidPropertyFile() {
-		mecab = new MeCab(1, "src/main/webapp/WEB-INF/invalid_mecab.properties");
-		mecab.run(inputFilePath, outputFilePath, hinshi);
+		mecab = new MeCab(1, "test/java/jp/assoon/data/invalid_mecab.properties");
 	}
 
 
