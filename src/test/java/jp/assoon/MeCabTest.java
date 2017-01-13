@@ -117,5 +117,18 @@ public class MeCabTest {
 		TestFileCreater.createEmptyFile(inputFilePath);
 		mecab.run(inputFilePath, outputFilePath, hinshi);
 	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testNotExistFile() {
+		mecab = new MeCab(1, "aaaaaaaa.properties");
+		mecab.run(inputFilePath, outputFilePath, hinshi);
+	}
+	
+	@Test(expected=RuntimeException.class)
+	public void testInvalidPropertyFile() {
+		mecab = new MeCab(1, "src/main/webapp/WEB-INF/invalid_mecab.properties");
+		mecab.run(inputFilePath, outputFilePath, hinshi);
+	}
+
 
 }
