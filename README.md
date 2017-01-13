@@ -1,5 +1,6 @@
 # Assoon
 [![Build Status](https://travis-ci.org/y-ota/Assoon.svg?branch=master)](https://travis-ci.org/y-ota/Assoon)
+[![Coverage Status](https://coveralls.io/repos/github/y-ota/Assoon/badge.svg)](https://coveralls.io/github/y-ota/Assoon)
 [![GPL License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](LICENSE)
 
 Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。テキストファイルをアップロードするだけで簡単にご利用できます。要約には、機械学習(LDA:Latent Dirichlet Allocation)を利用しています。
