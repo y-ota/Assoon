@@ -13,7 +13,7 @@ public class UtilityTest {
 
 	@Test
 	public void test() {
-		utility.replaceHalfSpaceInTextFile(TEST_DATA_PATH);
+		
 	}
 
 }
