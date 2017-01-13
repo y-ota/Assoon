@@ -168,7 +168,6 @@
 			    <version>2.2.0</version>
 			    <configuration>
 			    	<sourceEncoding>UTF-8</sourceEncoding>
-			        <repoToken>sbeaqavUy5OPX64YjcsFMdZD5zzZ2xocY</repoToken>
 			    </configuration>
 			</plugin>
             <plugin>
