@@ -20,6 +20,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,38 +59,29 @@ public class MeCab {
 
 	public MeCab(int nword, String mecabPropPath) {
 		this.nword = nword;
+		// ストップワードファイルを読み込む
+		InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
+		stopwordList = stopwordStream == null ? 
+				Collections.emptyList():utility.readText(new InputStreamReader(stopwordStream, StandardCharsets.UTF_8));
+		// MeCabパスの取得
+		Properties properties = new Properties();
+		try (InputStreamReader is = new InputStreamReader(new FileInputStream(mecabPropPath), StandardCharsets.UTF_8)) {
+			properties.load(is);
+		} catch (Exception e) {
+			throw new RuntimeException("Not found mecab.properties.");
+		}
+		// OSによって取得するパスを変更する
+		if (Utility.isWindows()) {
+			mecabBinPath = properties.getProperty("mecab.windows.bin");
+		} else if (Utility.isMac()) {
+			mecabBinPath = properties.getProperty("mecab.mac.bin");
+		} else {
+			mecabBinPath = properties.getProperty("mecab.linux.bin");
+		}
 
-		try {
-			// ストップワードファイルを読み込む
-			InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
-			if(stopwordStream == null){
-				stopwordList = Collections.emptyList();
-			}else{
-				stopwordList = utility.readText(new InputStreamReader(stopwordStream, "UTF-8"));
-			}
-
-			// MeCabパスの取得
-			Properties properties = new Properties();
-			try (InputStreamReader is = new InputStreamReader(new FileInputStream(mecabPropPath), "UTF-8")) {
-				properties.load(is);
-			} catch (Exception e) {
-				throw new RuntimeException("Not found mecab.properties.");
-			}
-			// OSによって取得するパスを変更する
-			if (Utility.isWindows()) {
-				mecabBinPath = properties.getProperty("mecab.windows.bin");
-			} else if (Utility.isMac()) {
-				mecabBinPath = properties.getProperty("mecab.mac.bin");
-			} else {
-				mecabBinPath = properties.getProperty("mecab.linux.bin");
-			}
-
-			// Mecabの実行パスが存在するか
-			if (!new File(mecabBinPath).exists()) {
-				throw new RuntimeException("Invalid meCab execution path. Please set the value in mecab.properties correctly.");
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		// Mecabの実行パスが存在するか
+		if (!new File(mecabBinPath).exists()) {
+			throw new RuntimeException("Invalid meCab execution path. Please set the value in mecab.properties correctly.");
 		}
 
 	}
@@ -130,12 +124,11 @@ public class MeCab {
 			// DOSに投げるコマンドと引数を指定する
 			String[] command = { mecabBinPath, inputfile };
 			ps = Runtime.getRuntime().exec(command);
-			br = new BufferedReader(new InputStreamReader(ps.getInputStream(), "UTF-8"));
+			br = new BufferedReader(new InputStreamReader(ps.getInputStream(), StandardCharsets.UTF_8));
 			String targetLine;
 
 			// 形態素解析結果を全て解析する
 			while ((targetLine = br.readLine())!=null) {
-
 				// 1文書の解析の終わりの場合
 				if (targetLine.equals("EOS")) {
 					docId++;
@@ -146,7 +139,6 @@ public class MeCab {
 						docIdList.add(String.valueOf(docId));
 						list.add(sb.toString());
 						wordInfoListList.add(wordInfoList);
-
 					} else {
 						System.out.println("skip row number:" + docId);
 					}
@@ -158,21 +150,14 @@ public class MeCab {
 
 					// 形態素解析の列(例： 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン)を処理する
 				} else {
-					String targetType1;
-					String targetType2;
-					String targetEnd;
-					String word = "";
 					// 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
 					Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),[^,]+,[^,]+,[^,]+,[^,]+,([^,]+)");
 					Matcher matcher = targetTypePattern.matcher(targetLine);
-					if (matcher.find()) {
-						word = matcher.group(1);
-						targetType1 = matcher.group(2);
-						targetType2 = matcher.group(3);
-						targetEnd = matcher.group(4);
-					} else {
-						throw new RuntimeException("The line dose not match. :" + targetLine);
-					}
+					if (!matcher.find()) throw new RuntimeException("The line dose not match. :" + targetLine); 
+					String word = matcher.group(1);
+					String targetType1 = matcher.group(2);
+					String targetType2 = matcher.group(3);
+					String targetEnd = matcher.group(4);
 
 					// 指定して品詞で、かつストップワードでないことかつ
 					// 一般名詞、固有名詞、サ変接続 のみとし、読みがない場合(*)はリストに追加しない
@@ -186,7 +171,6 @@ public class MeCab {
 						wordInfo.setEndIndex(word.length());
 						wordInfo.setWord(word);
 						wordInfoList.add(wordInfo);
-
 						// 半角エスケープ文字を全角に置換
 						sb.append(utility.replaceHalfEscapeCharToFullEscapeChar(word) + " ");
 						wordN++;

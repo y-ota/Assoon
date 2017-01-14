@@ -168,7 +168,7 @@ public class LDAExecution {
 	 * @param path
 	 * @return
 	 */
-	public Map<String, List<Double>> fileToPhi(String path) {
+	private Map<String, List<Double>> fileToPhi(String path) {
 		List<String> phiText = utility.readText(path);
 		LinkedHashMap<String, List<Double>> returnValue = new LinkedHashMap<>();
 
