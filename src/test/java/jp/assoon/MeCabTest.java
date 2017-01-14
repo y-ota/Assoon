@@ -11,6 +11,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import jp.assoon.mecab.MeCab;
+import jp.assoon.util.Utility;
+
 public class MeCabTest {
 
 	private MeCab mecab;

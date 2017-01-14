@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import jp.assoon.Utility;
+import jp.assoon.util.Utility;
 
 public class Model {	
 	

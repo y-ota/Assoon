@@ -21,15 +21,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
-import java.util.TreeMap;
-import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +41,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jgibblda.LDA;
+import jp.assoon.lda.LDAExecution;
+import jp.assoon.lda.TopicInfo;
+import jp.assoon.mecab.MeCab;
+import jp.assoon.util.Constants;
+import jp.assoon.util.Utility;
 
 /**
  * Asoon Controler
@@ -63,10 +61,10 @@ public class AssoonController {
 	private String webInfPath;
 	private String mecabPropPath;
 	
-	private String alpha;
-	private String beta;
-	private String iter;
-	private String topic;
+	private double alpha;
+	private double beta;
+	private int iter;
+	private int topic;
 	
 	private Utility utility = new Utility();
 
@@ -90,20 +88,22 @@ public class AssoonController {
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public String post(HttpServletRequest request, @RequestParam MultipartFile file, String nword, String[] word, String topic, String demoval, Model model) {
 		logger.info("POST Request");
-		
-		this.topic = topic;
 		// WEB-INFパス
 		webInfPath = context.getRealPath("/WEB-INF");
 		// MeCabのプロパティファイル
 		mecabPropPath = webInfPath + "/mecab.properties";
+		
+		this.topic = Integer.parseInt(topic);
+		// LDAの繰り返し回数を＋1する(ライブラリが指定した値-1のため)
+		iter++;		
 		// LDAのプロパティファイル
 		String ldaPropPath = webInfPath + "/lda.properties";
 		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(ldaPropPath), "UTF-8")) {
 			Properties properties = new Properties();
 			properties.load(isr);
-			alpha = properties.getProperty("lda.alpha");
-			beta = properties.getProperty("lda.beta");
-			iter = properties.getProperty("lda.iteration");
+			alpha = Double.parseDouble(properties.getProperty("lda.alpha"));
+			beta = Double.parseDouble(properties.getProperty("lda.beta"));
+			iter = Integer.parseInt(properties.getProperty("lda.iteration"));
 		} catch (IOException e1) {
 			throw new RuntimeException(e1);
 		}
@@ -128,9 +128,6 @@ public class AssoonController {
 			throw new RuntimeException(e);
 		}
 
-		// LDAの繰り返し回数を＋1する(ライブラリが指定した値-1のため)
-		iter = String.valueOf(Integer.parseInt(iter) + 1);
-
 		// ファイルの中身の半角スペースを全角スペースに置換
 		utility.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
 		
@@ -139,7 +136,7 @@ public class AssoonController {
 		mecab.run(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
 		
 		//LDA 実行
-		List<TopicInfo>topicInfoList = executeLDA(mecab,userDir);
+		List<TopicInfo>topicInfoList = new LDAExecution().executeLDA(mecab,userDir,alpha,beta, this.topic,iter);
 		
 		// 解析の詳細をクライアントに送る
 		model.addAttribute("postFlg", true);
@@ -151,104 +148,4 @@ public class AssoonController {
 		return "assoon";
 	}
 	
-	private List<TopicInfo> executeLDA(MeCab mecab, String userDir){
-		// LDA実行
-		LDA.main(new String[] { "-est", "-alpha", alpha, "-beta", beta, "-ntopics", topic, "-niters", iter, "-twords",
-				"20", "-dfile", Constants.SPACE_SEP_FILE, "-dir", userDir + "/", "-savestep", "10000" });
-
-		// オブジェクトに文書-トピック分布を入れる
-		List<DocProp> listDoc = utility.fileToDocProp(userDir + "/" + Constants.POST_FILE,
-				userDir + "/model-final.theta",
-				userDir + "/" + Constants.SPACE_SEP_FILE + Constants.SPACE_SEP_FILE_DOC_ID);
-
-		// 各文書の単語に割り当てられたトピック
-		List<List<Integer>> wordTopicAssignList = utility.fileToTopicAssing(userDir + "/model-final.tassign");
-
-		// トピックごとの単語の確率
-		Map<String, List<Double>> phiMap = utility.fileToPhi(userDir + "/model-final.phi");
-
-		// 文書ごと、トピックごとに単語の生成確率の平均を出す
-		List<Map<Integer, Double>> socreList = new ArrayList<>();
-
-		for (int i = 0; i < mecab.getWordInfoList().size(); i++) {
-			Map<Integer, Double> scoreMap = new LinkedHashMap<>();
-			for (int j = 0; j < mecab.getWordInfoList().get(i).size(); j++) {
-				if (scoreMap.containsKey(wordTopicAssignList.get(i).get(j))) {
-					scoreMap.put(
-							wordTopicAssignList.get(i)
-									.get(j),
-							scoreMap.get(
-									wordTopicAssignList.get(i).get(j)) + phiMap
-											.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
-											.get(wordTopicAssignList.get(i).get(j)));
-				} else {
-					scoreMap.put(wordTopicAssignList.get(i).get(j), phiMap
-							.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
-							.get(wordTopicAssignList.get(i).get(j)));
-				}
-			}
-			socreList.add(scoreMap);
-		}
-
-		Map<Integer, Integer> topicCountMap = new TreeMap<>();
-		for (Map<Integer, Double> maps : socreList) {
-			double[] topicValue = new double[Integer.parseInt(topic)];
-			for (Integer id : maps.keySet()) {
-				topicValue[id] = maps.get(id);
-			}
-
-			if (topicCountMap.containsKey(utility.maxValueTopic(topicValue))) {
-				topicCountMap.put(utility.maxValueTopic(topicValue),
-						topicCountMap.get(utility.maxValueTopic(topicValue)) + 1);
-			} else {
-				topicCountMap.put(utility.maxValueTopic(topicValue), 1);
-			}
-		}
-
-		// オブジェクトに単語分布を入れる
-		List<TopicInfo> topicInfoList = new ArrayList<>();
-		int topicNum = Integer.parseInt(topic);
-		for (int i = 0; i < topicNum; i++) {
-			TopicInfo topicInfo = new TopicInfo();
-			topicInfo.setNum(i);
-			topicInfo.setWordProp(utility.fileToWordProp(userDir + "/topic" + i + ".csv"));
-
-			if (topicCountMap.containsKey(i)) {
-				topicInfo.setSimcount(topicCountMap.get(i));
-			} else {
-				topicInfo.setSimcount(0);
-			}
-
-			List<String> list = new ArrayList<>();
-
-			// トピック比率がもっとも高いテキストをadd
-			for (int j = 0; j < 2; j++) {
-				List<WordInfo> wordInfoList = mecab.getWordInfoList()
-						.get(listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDocId());
-				List<Integer> topicAssList = wordTopicAssignList
-						.get(listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDocId());
-				String text = listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDoument();
-
-				StringBuilder sb = new StringBuilder(text);
-				int index = 0;
-				int k = 0;
-				for (WordInfo wordInfo : wordInfoList) {
-					if (topicAssList.get(k) == i) {
-						sb.insert(index + wordInfo.getStartIndex(), Constants.HTML_FONT_START);
-						index += Constants.HTML_FONT_START.length();
-						sb.insert(wordInfo.getStartIndex() + wordInfo.getEndIndex() + index, Constants.HTML_FONT_END);
-						index += Constants.HTML_FONT_END.length();
-					}
-					k++;
-				}
-				list.add(sb.toString());
-
-			}
-			topicInfo.setDocument(list);
-			topicInfoList.add(topicInfo);
-		}
-
-		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
-	}
-
 }

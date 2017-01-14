@@ -12,26 +12,26 @@
  *  GNU General Public License for more details.
  */
 
-package jp.assoon;
+package jp.assoon.lda;
 
-public class TopicProp {
-	private String topic;
-	private double prop;
-
-	public String getTopic() {
-		return topic;
+public class WordProp {
+	public String getWord() {
+		return word;
 	}
 
-	public void setTopic(String topic) {
-		this.topic = topic;
+	public void setWord(String word) {
+		this.word = word;
 	}
 
-	public double getProp() {
+	public String getProp() {
 		return prop;
 	}
 
-	public void setProp(double prop) {
+	public void setProp(String prop) {
 		this.prop = prop;
 	}
+
+	private String word;
+	private String prop;
 
 }

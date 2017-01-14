@@ -1,5 +1,5 @@
-<%@page import="jp.assoon.TopicInfo"%>
-<%@page import="jp.assoon.WordProp"%>
+<%@page import="jp.assoon.lda.TopicInfo"%>
+<%@page import="jp.assoon.lda.WordProp"%>
 <%@page import="java.util.List"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ page session="false"%>

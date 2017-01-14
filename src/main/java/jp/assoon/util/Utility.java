@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  */
 
-package jp.assoon;
+package jp.assoon.util;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -35,6 +35,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import jp.assoon.lda.DocProp;
+import jp.assoon.lda.WordProp;
 
 public class Utility {
 	public List<String> readText(InputStreamReader is) {
@@ -108,31 +111,7 @@ public class Utility {
 		return returnList;
 	}
 
-	public List<DocProp> fileToDocProp(String docPath, String thetaPath, String sepDocIdFilePath) {
-		List<String> docList = readText(docPath);
-		List<String> thetaList = readText(thetaPath);
 
-		List<DocProp> returnList = new ArrayList<>();
-
-		List<String> docIdList = readText(sepDocIdFilePath);
-		int idx = 0;
-		for (String docId : docIdList) {
-			DocProp docProp = new DocProp();
-			docProp.setDocId(idx);
-			docProp.setDoument(replaceHalfEscapeCharToFullEscapeChar(docList.get(Integer.parseInt(docId) - 1)));
-			String[] theta = thetaList.get(idx).split("\t");
-			double[] thetaDouble = new double[theta.length];
-
-			for (int j = 0; j < theta.length; j++) {
-				thetaDouble[j] = Double.parseDouble(theta[j]);
-			}
-			docProp.setTopics(thetaDouble);
-			idx++;
-			returnList.add(docProp);
-		}
-
-		return returnList;
-	}
 	
 	/**
 	 * 半角エスケープ文字を全角エスケープ文字に置換する
@@ -144,53 +123,9 @@ public class Utility {
 		.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋");
 	}
 
-	/**
-	 * assginファイルをリストにする
-	 * 
-	 * @param assignPath
-	 * @return
-	 */
-	public List<List<Integer>> fileToTopicAssing(String assignPath) {
-		List<List<Integer>> returnList = new ArrayList<>();
-		List<String> asList = readText(assignPath);
-		for (String line : asList) {
-			List<Integer> listInt = new ArrayList<>();
-			String[] items = line.split(" ");
-			for (String item : items) {
-				listInt.add(Integer.parseInt(item.split(":")[1]));
-			}
-			returnList.add(listInt);
-		}
 
-		return returnList;
-	}
 
-	/**
-	 * fileからphiの情報を取得する
-	 * 
-	 * @param path
-	 * @return
-	 */
-	public Map<String, List<Double>> fileToPhi(String path) {
-		List<String> phiText = readText(path);
-		LinkedHashMap<String, List<Double>> returnValue = new LinkedHashMap<>();
 
-		// 単語ごと、トピックごとの生成確率をセットする
-		int index = 0;
-		for (String word : phiText.get(0).split("\t")) {
-
-			List<Double> doubleValue = new ArrayList<Double>();
-			for (int i = 1; i < phiText.size(); i++) {
-				String doubleRec = phiText.get(i).split("\t")[index];
-				doubleValue.add(Double.parseDouble(doubleRec));
-			}
-			index++;
-
-			returnValue.put(word, doubleValue);
-		}
-
-		return returnValue;
-	}
 
 	/**
 	 * ファイルの中身の半角スペースを全角スペースに置換

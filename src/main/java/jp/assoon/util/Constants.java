@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  */
 
-package jp.assoon;
+package jp.assoon.util;
 
 /**
  * Constants for ASOQ

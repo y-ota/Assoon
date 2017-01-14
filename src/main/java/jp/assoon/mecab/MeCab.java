@@ -12,7 +12,7 @@
  *  GNU General Public License for more details.
  */
 
-package jp.assoon;
+package jp.assoon.mecab;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -28,6 +28,10 @@ import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import jp.assoon.lda.WordInfo;
+import jp.assoon.util.Constants;
+import jp.assoon.util.Utility;
 
 /**
  * MeCab
