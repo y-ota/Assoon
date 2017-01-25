@@ -183,7 +183,7 @@ public class AssoonUtils {
 		return OS_NAME.startsWith("windows");
 	}
 	
-	public void deleteDirectory(String dirPath) {
+	public static void deleteDirectory(String dirPath) {
 	    File file = new File(dirPath);
 	    recursiveDeleteFile(file);
 	}

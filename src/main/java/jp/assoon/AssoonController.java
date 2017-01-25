@@ -65,8 +65,6 @@ public class AssoonController {
 	private double beta;
 	private int iter;
 	private int topic;
-	
-	private AssoonUtils utility = new AssoonUtils();
 
     @RequestMapping("/sample")
     public void downloadSampleFile(HttpServletResponse res) throws IOException {
@@ -129,7 +127,7 @@ public class AssoonController {
 		}
 
 		// ファイルの中身の半角スペースを全角スペースに置換
-		utility.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
+		AssoonUtils.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
 		
 		// 形態素解析
 		MeCab mecab = new MeCab(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
@@ -143,7 +141,7 @@ public class AssoonController {
 		model.addAttribute("topicInfo", topicInfoList);
 
 		//userDir削除
-		utility.deleteDirectory(userDir);
+		AssoonUtils.deleteDirectory(userDir);
 		
 		return "assoon";
 	}
