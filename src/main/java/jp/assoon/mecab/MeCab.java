@@ -21,8 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,8 +31,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import jp.assoon.lda.WordInfo;
+import jp.assoon.util.AssoonUtils;
 import jp.assoon.util.Constants;
-import jp.assoon.util.Utility;
 
 /**
  * MeCab
@@ -51,7 +49,6 @@ public class MeCab {
 	private List<String> stopwordList; 
 	// MeCab実行パス
 	private static String mecabBinPath; 
-	private Utility utility = new Utility();
 
 	public List<List<WordInfo>> getWordInfoList() {
 		return wordInfoListList;
@@ -62,7 +59,7 @@ public class MeCab {
 		// ストップワードファイルを読み込む
 		InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
 		stopwordList = stopwordStream == null ? 
-				Collections.emptyList():utility.readText(new InputStreamReader(stopwordStream, StandardCharsets.UTF_8));
+				Collections.emptyList():AssoonUtils.readText(new InputStreamReader(stopwordStream, StandardCharsets.UTF_8));
 		// MeCabパスの取得
 		Properties properties = new Properties();
 		try (InputStreamReader is = new InputStreamReader(new FileInputStream(mecabPropPath), StandardCharsets.UTF_8)) {
@@ -71,9 +68,9 @@ public class MeCab {
 			throw new RuntimeException("Not found mecab.properties.");
 		}
 		// OSによって取得するパスを変更する
-		if (Utility.isWindows()) {
+		if (AssoonUtils.isWindows()) {
 			mecabBinPath = properties.getProperty("mecab.windows.bin");
-		} else if (Utility.isMac()) {
+		} else if (AssoonUtils.isMac()) {
 			mecabBinPath = properties.getProperty("mecab.mac.bin");
 		} else {
 			mecabBinPath = properties.getProperty("mecab.linux.bin");
@@ -172,7 +169,7 @@ public class MeCab {
 						wordInfo.setWord(word);
 						wordInfoList.add(wordInfo);
 						// 半角エスケープ文字を全角に置換
-						sb.append(utility.replaceHalfEscapeCharToFullEscapeChar(word) + " ");
+						sb.append(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(word) + " ");
 						wordN++;
 					}
 					wordLength += word.length();
@@ -181,8 +178,8 @@ public class MeCab {
 			// 文書数を１行目にセット
 			list.set(0, String.valueOf(doccnt));
 			ps.waitFor();
-			utility.write(list, outputPath);
-			utility.write(docIdList, outputPath + Constants.SPACE_SEP_FILE_DOC_ID);
+			AssoonUtils.write(list, outputPath);
+			AssoonUtils.write(docIdList, outputPath + Constants.SPACE_SEP_FILE_DOC_ID);
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);

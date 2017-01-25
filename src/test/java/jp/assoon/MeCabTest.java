@@ -12,14 +12,14 @@ import org.junit.Test;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import jp.assoon.mecab.MeCab;
-import jp.assoon.util.Utility;
+import jp.assoon.util.AssoonUtils;
 
 public class MeCabTest {
 
 	private MeCab mecab;
 	private static final String inputFilePath = "target/testdata1.txt";
 	private static final String outputFilePath = "target/testdata1_after.txt";
-	private static Utility utility = new Utility();
+	private static AssoonUtils utility = new AssoonUtils();
 	private static final String[] hinshi = {"1"};
 	
 	static class TestFileCreater{

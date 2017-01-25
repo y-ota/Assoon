@@ -45,7 +45,7 @@ import jp.assoon.lda.LDAExecution;
 import jp.assoon.lda.TopicInfo;
 import jp.assoon.mecab.MeCab;
 import jp.assoon.util.Constants;
-import jp.assoon.util.Utility;
+import jp.assoon.util.AssoonUtils;
 
 /**
  * Asoon Controler
@@ -66,7 +66,7 @@ public class AssoonController {
 	private int iter;
 	private int topic;
 	
-	private Utility utility = new Utility();
+	private AssoonUtils utility = new AssoonUtils();
 
     @RequestMapping("/sample")
     public void downloadSampleFile(HttpServletResponse res) throws IOException {

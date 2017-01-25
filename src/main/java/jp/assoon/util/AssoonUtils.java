@@ -15,32 +15,26 @@
 package jp.assoon.util;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import jp.assoon.lda.DocProp;
 import jp.assoon.lda.WordProp;
 
-public class Utility {
-	public List<String> readText(InputStreamReader is) {
+public class AssoonUtils {
+	/**
+	 * After reading the file of the inputStream specified, return list
+	 */
+	public static List<String> readText(InputStreamReader is) {
 		List<String> list = new ArrayList<String>();
 		BufferedReader br = null;
 		String line = null;
@@ -51,63 +45,50 @@ public class Utility {
 			}
 			return list;
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new UncheckedIOException(e);
 		} finally {
 			if (br != null) {
 				try {
 					br.close();
 				} catch (IOException e) {
-					throw new RuntimeException(e);
+					throw new UncheckedIOException(e);
 				}
 			}
 		}
-
 	}
 
-	public List<String> readText(String filePath) {
-		List<String> list = new ArrayList<String>();
-		BufferedReader br = null;
-		String line = null;
-
+	/**
+	 * After reading the file of the path specified, return list
+	 */
+	public static List<String> readText(String filePath) {
 		try {
-			br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(filePath)), "UTF-8"));
-			while ((line = br.readLine()) != null) {
-				list.add(line);
-			}
-			return list;
+			return Files.readAllLines(Paths.get(filePath), StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			throw new RuntimeException(e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			}
-
+			throw new UncheckedIOException(e);
 		}
-
 	}
 
-	public void write(List<String> list, String outputPath) {
+	/**
+	 *  Write the list specified to the output path specified 
+	 */
+	public static void write(List<String> list, String outputPath) {
 		try {
 			Files.write(Paths.get(outputPath), list, StandardCharsets.UTF_8);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new UncheckedIOException(e);
 		}
 	}
 
-	public List<WordProp> fileToWordProp(String path) {
+	public static List<WordProp> fileToWordProp(String path) {
 		List<String> list = readText(path);
 		List<WordProp> returnList = new ArrayList<>();
-		for (int i = 0; i < 20; i++) {
+		list.stream().limit(20).forEach(line->{
 			WordProp wordProp = new WordProp();
-			String[] items = list.get(i).split(",");
+			String[] items = line.split(",");
 			wordProp.setWord(items[0]);
 			wordProp.setProp(items[1]);
-			returnList.add(wordProp);
-		}
+			returnList.add(wordProp);	
+		});
 		return returnList;
 	}
 
@@ -118,13 +99,10 @@ public class Utility {
 	 * @param str 半角エスケープ文字
 	 * @return 全角エスケープ文字
 	 */
-	public String replaceHalfEscapeCharToFullEscapeChar(String str){
+	public static String replaceHalfEscapeCharToFullEscapeChar(String str){
 		return str.replace("\"", "”").replace("'", "\\'")
 		.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋");
 	}
-
-
-
 
 
 	/**
@@ -134,7 +112,7 @@ public class Utility {
 	 * @param before
 	 * @param after
 	 */
-	public void replaceHalfSpaceInTextFile(String filePath) {
+	public static void replaceHalfSpaceInTextFile(String filePath) {
 		List<String> fileList = readText(filePath).stream().map(a->a.replace(" ", "　")).collect(Collectors.toList());
 		write(fileList, filePath);
 	}
@@ -146,7 +124,7 @@ public class Utility {
 	 * @param topicNum
 	 * @return
 	 */
-	public int maxTopicValueDocId(List<Map<Integer, Double>> data, int topicNum) {
+	public static int maxTopicValueDocId(List<Map<Integer, Double>> data, int topicNum) {
 		int docId = 0;
 		double maxValue = 0.0;
 		if (data.get(0).containsKey(topicNum)) {
@@ -172,7 +150,7 @@ public class Utility {
 	 * @param values
 	 * @return
 	 */
-	public Integer maxValueTopic(double[] values) {
+	public static Integer maxValueTopic(double[] values) {
 		double max = values[0];
 		int maxIndex = 0;
 		for (int i = 0; i < values.length; i++) {
@@ -210,7 +188,7 @@ public class Utility {
 	    recursiveDeleteFile(file);
 	}
 	
-	private void recursiveDeleteFile(File file) {
+	private static void recursiveDeleteFile(File file) {
 	    if (!file.exists()) {
 	        return;
 	    }

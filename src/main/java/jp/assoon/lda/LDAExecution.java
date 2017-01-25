@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import jgibblda.LDA;
 import jp.assoon.mecab.MeCab;
 import jp.assoon.util.Constants;
-import jp.assoon.util.Utility;
+import jp.assoon.util.AssoonUtils;
 
 public class LDAExecution {
 	
@@ -114,7 +114,7 @@ public class LDAExecution {
 		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
 	}
 	
-	Utility utility = new Utility();
+	AssoonUtils utility = new AssoonUtils();
 	private List<DocProp> fileToDocProp(String docPath, String thetaPath, String sepDocIdFilePath) {
 		List<String> docList = utility.readText(docPath);
 		List<String> thetaList = utility.readText(thetaPath);

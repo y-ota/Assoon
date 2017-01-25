@@ -43,7 +43,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import jp.assoon.util.Utility;
+import jp.assoon.util.AssoonUtils;
 
 public class Model {	
 	
@@ -413,7 +413,7 @@ public class Model {
 					}
 				}
 				//大田追加
-				new Utility().write(list, this.dir+"topic"+k+".csv");
+				new AssoonUtils().write(list, this.dir+"topic"+k+".csv");
 			} //end foreach topic			
 						
 			writer.close();
