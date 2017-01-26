@@ -24,9 +24,13 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 import jp.assoon.lda.WordProp;
 
@@ -145,28 +149,17 @@ public class AssoonUtils {
 	}
 
 	/**
-	 * 最大トピック番号を返す
-	 * 
-	 * @param values
-	 * @return
+	 * Return the index of the max value in specified double array
 	 */
 	public static Integer maxValueTopic(double[] values) {
-		double max = values[0];
-		int maxIndex = 0;
-		for (int i = 0; i < values.length; i++) {
-			if (max < values[i]) {
-				max = values[i];
-				maxIndex = i;
-			}
-		}
-
-		// 最大値が複数ある場合は、nullを返す
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] == max && maxIndex != i) {
-				return 99999999;
-			}
-		}
-		return maxIndex;
+		List<Double> doubles = Arrays.stream(values).boxed().collect(Collectors.toList());
+		int maxIndex = IntStream.range(0, values.length)
+				         .boxed().max(Comparator.comparingDouble(doubles::get)).get();
+		double max = doubles.get(maxIndex);
+		// if the values have multiple max values, return null value.
+		Map<Double,Long> map = Arrays.stream(values).boxed()
+				                .collect(Collectors.groupingBy(Double::valueOf,Collectors.counting()));
+		return  map.get(max).longValue() >= 2? null:maxIndex;
 	}
 
 	private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
@@ -184,8 +177,7 @@ public class AssoonUtils {
 	}
 	
 	public static void deleteDirectory(String dirPath) {
-	    File file = new File(dirPath);
-	    recursiveDeleteFile(file);
+	    recursiveDeleteFile(new File(dirPath));
 	}
 	
 	private static void recursiveDeleteFile(File file) {

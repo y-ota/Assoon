@@ -43,11 +43,11 @@ public class LDAExecution {
 									.get(j),
 							scoreMap.get(
 									wordTopicAssignList.get(i).get(j)) + phiMap
-											.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
+											.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
 											.get(wordTopicAssignList.get(i).get(j)));
 				} else {
 					scoreMap.put(wordTopicAssignList.get(i).get(j), phiMap
-							.get(utility.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
+							.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
 							.get(wordTopicAssignList.get(i).get(j)));
 				}
 			}
@@ -61,11 +61,11 @@ public class LDAExecution {
 				topicValue[id] = maps.get(id);
 			}
 
-			if (topicCountMap.containsKey(utility.maxValueTopic(topicValue))) {
-				topicCountMap.put(utility.maxValueTopic(topicValue),
-						topicCountMap.get(utility.maxValueTopic(topicValue)) + 1);
+			if (topicCountMap.containsKey(AssoonUtils.maxValueTopic(topicValue))) {
+				topicCountMap.put(AssoonUtils.maxValueTopic(topicValue),
+						topicCountMap.get(AssoonUtils.maxValueTopic(topicValue)) + 1);
 			} else {
-				topicCountMap.put(utility.maxValueTopic(topicValue), 1);
+				topicCountMap.put(AssoonUtils.maxValueTopic(topicValue), 1);
 			}
 		}
 
@@ -74,7 +74,7 @@ public class LDAExecution {
 		for (int i = 0; i < topic; i++) {
 			TopicInfo topicInfo = new TopicInfo();
 			topicInfo.setNum(i);
-			topicInfo.setWordProp(utility.fileToWordProp(userDir + "/topic" + i + ".csv"));
+			topicInfo.setWordProp(AssoonUtils.fileToWordProp(userDir + "/topic" + i + ".csv"));
 
 			if (topicCountMap.containsKey(i)) {
 				topicInfo.setSimcount(topicCountMap.get(i));
@@ -87,10 +87,10 @@ public class LDAExecution {
 			// トピック比率がもっとも高いテキストをadd
 			for (int j = 0; j < 2; j++) {
 				List<WordInfo> wordInfoList = mecab.getWordInfoList()
-						.get(listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDocId());
+						.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
 				List<Integer> topicAssList = wordTopicAssignList
-						.get(listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDocId());
-				String text = listDoc.get(utility.maxTopicValueDocId(socreList, i)).getDoument();
+						.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
+				String text = listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDoument();
 
 				StringBuilder sb = new StringBuilder(text);
 				int index = 0;
@@ -114,19 +114,18 @@ public class LDAExecution {
 		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
 	}
 	
-	AssoonUtils utility = new AssoonUtils();
 	private List<DocProp> fileToDocProp(String docPath, String thetaPath, String sepDocIdFilePath) {
-		List<String> docList = utility.readText(docPath);
-		List<String> thetaList = utility.readText(thetaPath);
+		List<String> docList = AssoonUtils.readText(docPath);
+		List<String> thetaList = AssoonUtils.readText(thetaPath);
 
 		List<DocProp> returnList = new ArrayList<>();
 
-		List<String> docIdList = utility.readText(sepDocIdFilePath);
+		List<String> docIdList = AssoonUtils.readText(sepDocIdFilePath);
 		int idx = 0;
 		for (String docId : docIdList) {
 			DocProp docProp = new DocProp();
 			docProp.setDocId(idx);
-			docProp.setDoument(utility.replaceHalfEscapeCharToFullEscapeChar(docList.get(Integer.parseInt(docId) - 1)));
+			docProp.setDoument(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(docList.get(Integer.parseInt(docId) - 1)));
 			String[] theta = thetaList.get(idx).split("\t");
 			double[] thetaDouble = new double[theta.length];
 
@@ -149,7 +148,7 @@ public class LDAExecution {
 	 */
 	private List<List<Integer>> fileToTopicAssing(String assignPath) {
 		List<List<Integer>> returnList = new ArrayList<>();
-		List<String> asList = utility.readText(assignPath);
+		List<String> asList = AssoonUtils.readText(assignPath);
 		for (String line : asList) {
 			List<Integer> listInt = new ArrayList<>();
 			String[] items = line.split(" ");
@@ -169,7 +168,7 @@ public class LDAExecution {
 	 * @return
 	 */
 	private Map<String, List<Double>> fileToPhi(String path) {
-		List<String> phiText = utility.readText(path);
+		List<String> phiText = AssoonUtils.readText(path);
 		LinkedHashMap<String, List<Double>> returnValue = new LinkedHashMap<>();
 
 		// 単語ごと、トピックごとの生成確率をセットする
