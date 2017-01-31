@@ -1,6 +1,7 @@
 package jp.assoon.lda;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,15 +22,15 @@ public class LDAExecution {
 				"20", "-dfile", Constants.SPACE_SEP_FILE, "-dir", userDir + "/", "-savestep", "10000" });
 
 		// オブジェクトに文書-トピック分布を入れる
-		List<DocProp> listDoc = fileToDocProp(userDir + "/" + Constants.POST_FILE,
+		List<DocProp> listDoc = readDocumentPropFile(userDir + "/" + Constants.POST_FILE,
 				userDir + "/model-final.theta",
 				userDir + "/" + Constants.SPACE_SEP_FILE + Constants.SPACE_SEP_FILE_DOC_ID);
 
 		// 各文書の単語に割り当てられたトピック
-		List<List<Integer>> wordTopicAssignList = fileToTopicAssing(userDir + "/model-final.tassign");
+		List<List<Integer>> wordTopicAssignList = readAssginFile(userDir + "/model-final.tassign");
 
 		// トピックごとの単語の確率
-		Map<String, List<Double>> phiMap = fileToPhi(userDir + "/model-final.phi");
+		Map<String, List<Double>> phiMap = readPhiFile(userDir + "/model-final.phi");
 
 		// 文書ごと、トピックごとに単語の生成確率の平均を出す
 		List<Map<Integer, Double>> socreList = new ArrayList<>();
@@ -114,7 +115,7 @@ public class LDAExecution {
 		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
 	}
 	
-	private List<DocProp> fileToDocProp(String docPath, String thetaPath, String sepDocIdFilePath) {
+	private List<DocProp> readDocumentPropFile(String docPath, String thetaPath, String sepDocIdFilePath) {
 		List<String> docList = AssoonUtils.readText(docPath);
 		List<String> thetaList = AssoonUtils.readText(thetaPath);
 
@@ -127,12 +128,7 @@ public class LDAExecution {
 			docProp.setDocId(idx);
 			docProp.setDoument(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(docList.get(Integer.parseInt(docId) - 1)));
 			String[] theta = thetaList.get(idx).split("\t");
-			double[] thetaDouble = new double[theta.length];
-
-			for (int j = 0; j < theta.length; j++) {
-				thetaDouble[j] = Double.parseDouble(theta[j]);
-			}
-			docProp.setTopics(thetaDouble);
+			docProp.setTopics(Arrays.stream(theta).mapToDouble(Double::parseDouble).toArray());
 			idx++;
 			returnList.add(docProp);
 		}
@@ -146,7 +142,7 @@ public class LDAExecution {
 	 * @param assignPath
 	 * @return
 	 */
-	private List<List<Integer>> fileToTopicAssing(String assignPath) {
+	private List<List<Integer>> readAssginFile(String assignPath) {
 		List<List<Integer>> returnList = new ArrayList<>();
 		List<String> asList = AssoonUtils.readText(assignPath);
 		for (String line : asList) {
@@ -167,7 +163,7 @@ public class LDAExecution {
 	 * @param path
 	 * @return
 	 */
-	private Map<String, List<Double>> fileToPhi(String path) {
+	private Map<String, List<Double>> readPhiFile(String path) {
 		List<String> phiText = AssoonUtils.readText(path);
 		LinkedHashMap<String, List<Double>> returnValue = new LinkedHashMap<>();
 
