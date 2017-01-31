@@ -25,5 +25,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="src/main/webapp/WEB-INF/lib/jggiblda.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
