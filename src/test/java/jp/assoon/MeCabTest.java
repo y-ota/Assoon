@@ -19,7 +19,6 @@ public class MeCabTest {
 	private MeCab mecab;
 	private static final String inputFilePath = "target/testdata1.txt";
 	private static final String outputFilePath = "target/testdata1_after.txt";
-	private static AssoonUtils utility = new AssoonUtils();
 	private static final String[] hinshi = {"1"};
 	
 	static class TestFileCreater{
@@ -41,12 +40,12 @@ public class MeCabTest {
 			tempList.add("早く仕事がしたい。");
 			tempList.add("もっと、働きやすい環境になってほしい。");
 			tempList.add("家族の協力が一番えんりょせずにたよろう（じじばばを使う）");
-			utility.write(tempList, inputFilePath);
+			AssoonUtils.write(tempList, inputFilePath);
 		}
 		
 		public static void createEmptyFile(String inputFilePath){
 			List<String> tempList = new ArrayList<>();
-			utility.write(tempList, inputFilePath);
+			AssoonUtils.write(tempList, inputFilePath);
 		}
 		
 		public static List<String> createCorrectList(){
@@ -90,7 +89,7 @@ public class MeCabTest {
 		TestFileCreater.createInputFile(inputFilePath);
 		List<String> correctList = TestFileCreater.createCorrectList();
 		mecab.run(inputFilePath, outputFilePath, hinshi);
-		List<String> outputFileList = utility.readText(outputFilePath);
+		List<String> outputFileList = AssoonUtils.readText(outputFilePath);
 		Assert.assertThat(correctList, equalTo(outputFileList));
 	}
 	
@@ -108,7 +107,7 @@ public class MeCabTest {
 		TestFileCreater.createEmptyFile(inputFilePath);
 		List<String> correctList = TestFileCreater.createCorrectEmptyList();
 		mecab.run(inputFilePath, outputFilePath, hinshi);
-		List<String> outputFileList = utility.readText(outputFilePath);
+		List<String> outputFileList = AssoonUtils.readText(outputFilePath);
 		Assert.assertThat(correctList, equalTo(outputFileList));
 	}
 	

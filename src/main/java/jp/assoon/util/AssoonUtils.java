@@ -35,6 +35,9 @@ import java.util.stream.IntStream;
 import jp.assoon.lda.WordProp;
 
 public class AssoonUtils {
+	
+	private AssoonUtils(){};
+	
 	/**
 	 * After reading the file of the inputStream specified, return list
 	 */

@@ -413,7 +413,7 @@ public class Model {
 					}
 				}
 				//大田追加
-				new AssoonUtils().write(list, this.dir+"topic"+k+".csv");
+				AssoonUtils.write(list, this.dir+"topic"+k+".csv");
 			} //end foreach topic			
 						
 			writer.close();
