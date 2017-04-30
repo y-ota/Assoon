@@ -55,6 +55,37 @@ public class LDAExecution {
 			socreList.add(scoreMap);
 		}
 
+		// トピックごとの類似意見数を求める
+		Map<Integer, Integer> topicCountMap = getTopicCountMap(topic, socreList);
+
+		// オブジェクトに単語分布を入れる
+		List<TopicInfo> topicInfoList = new ArrayList<>();
+		for (int i = 0; i < topic; i++) {
+			TopicInfo topicInfo = new TopicInfo();
+			topicInfo.setNum(i);
+			topicInfo.setWordProp(readTopicFile(userDir + "/topic" + i + ".csv"));
+
+			if (topicCountMap.containsKey(i)) {
+				topicInfo.setSimcount(topicCountMap.get(i));
+			} else {
+				topicInfo.setSimcount(0);
+			}
+
+			List<String> list = getTopText(mecab, listDoc, wordTopicAssignList, socreList, i);
+			topicInfo.setDocument(list);
+			topicInfoList.add(topicInfo);
+		}
+
+		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
+	}
+
+	/**
+	 * トピックごとのテキストの数をカウントのMapを求める
+	 * @param topic
+	 * @param socreList
+	 * @return
+	 */
+	private Map<Integer, Integer> getTopicCountMap(int topic, List<Map<Integer, Double>> socreList) {
 		Map<Integer, Integer> topicCountMap = new TreeMap<>();
 		for (Map<Integer, Double> maps : socreList) {
 			double[] topicValue = new double[topic];
@@ -69,50 +100,46 @@ public class LDAExecution {
 				topicCountMap.put(AssoonUtils.maxValueTopic(topicValue), 1);
 			}
 		}
+		
+		return topicCountMap;
+	}
 
-		// オブジェクトに単語分布を入れる
-		List<TopicInfo> topicInfoList = new ArrayList<>();
-		for (int i = 0; i < topic; i++) {
-			TopicInfo topicInfo = new TopicInfo();
-			topicInfo.setNum(i);
-			topicInfo.setWordProp(AssoonUtils.fileToWordProp(userDir + "/topic" + i + ".csv"));
+	/**
+	 *  トピック比率がもっとも高いテキストを取得する
+	 * @param mecab
+	 * @param listDoc
+	 * @param wordTopicAssignList
+	 * @param socreList
+	 * @param i
+	 * @return
+	 */
+	private List<String> getTopText(MeCab mecab, List<DocProp> listDoc, List<List<Integer>> wordTopicAssignList, List<Map<Integer, Double>> socreList, int i) {
+		List<String> list = new ArrayList<>();
 
-			if (topicCountMap.containsKey(i)) {
-				topicInfo.setSimcount(topicCountMap.get(i));
-			} else {
-				topicInfo.setSimcount(0);
-			}
+		// トピック比率がもっとも高いテキストをadd
+		for (int j = 0; j < 2; j++) {
+			List<WordInfo> wordInfoList = mecab.getWordInfoList()
+					.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
+			List<Integer> topicAssList = wordTopicAssignList
+					.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
+			String text = listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDoument();
 
-			List<String> list = new ArrayList<>();
-
-			// トピック比率がもっとも高いテキストをadd
-			for (int j = 0; j < 2; j++) {
-				List<WordInfo> wordInfoList = mecab.getWordInfoList()
-						.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
-				List<Integer> topicAssList = wordTopicAssignList
-						.get(listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDocId());
-				String text = listDoc.get(AssoonUtils.maxTopicValueDocId(socreList, i)).getDoument();
-
-				StringBuilder sb = new StringBuilder(text);
-				int index = 0;
-				int k = 0;
-				for (WordInfo wordInfo : wordInfoList) {
-					if (topicAssList.get(k) == i) {
-						sb.insert(index + wordInfo.getStartIndex(), Constants.HTML_FONT_START);
-						index += Constants.HTML_FONT_START.length();
-						sb.insert(wordInfo.getStartIndex() + wordInfo.getEndIndex() + index, Constants.HTML_FONT_END);
-						index += Constants.HTML_FONT_END.length();
-					}
-					k++;
+			StringBuilder sb = new StringBuilder(text);
+			int index = 0;
+			int k = 0;
+			for (WordInfo wordInfo : wordInfoList) {
+				if (topicAssList.get(k) == i) {
+					sb.insert(index + wordInfo.getStartIndex(), Constants.HTML_FONT_START);
+					index += Constants.HTML_FONT_START.length();
+					sb.insert(wordInfo.getStartIndex() + wordInfo.getEndIndex() + index, Constants.HTML_FONT_END);
+					index += Constants.HTML_FONT_END.length();
 				}
-				list.add(sb.toString());
-
+				k++;
 			}
-			topicInfo.setDocument(list);
-			topicInfoList.add(topicInfo);
-		}
+			list.add(sb.toString());
 
-		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
+		}
+		return list;
 	}
 	
 	private List<DocProp> readDocumentPropFile(String docPath, String thetaPath, String sepDocIdFilePath) {
@@ -182,6 +209,19 @@ public class LDAExecution {
 		}
 
 		return returnValue;
+	}
+	
+	public List<WordProp> readTopicFile(String path) {
+		List<String> list = AssoonUtils.readText(path);
+		List<WordProp> returnList = new ArrayList<>();
+		list.stream().limit(20).forEach(line->{
+			WordProp wordProp = new WordProp();
+			String[] items = line.split(",");
+			wordProp.setWord(items[0]);
+			wordProp.setProp(items[1]);
+			returnList.add(wordProp);	
+		});
+		return returnList;
 	}
 
 }

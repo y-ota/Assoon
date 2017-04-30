@@ -84,21 +84,6 @@ public class AssoonUtils {
 		}
 	}
 
-	public static List<WordProp> fileToWordProp(String path) {
-		List<String> list = readText(path);
-		List<WordProp> returnList = new ArrayList<>();
-		list.stream().limit(20).forEach(line->{
-			WordProp wordProp = new WordProp();
-			String[] items = line.split(",");
-			wordProp.setWord(items[0]);
-			wordProp.setProp(items[1]);
-			returnList.add(wordProp);	
-		});
-		return returnList;
-	}
-
-
-	
 	/**
 	 * 半角エスケープ文字を全角エスケープ文字に置換する
 	 * @param str 半角エスケープ文字
