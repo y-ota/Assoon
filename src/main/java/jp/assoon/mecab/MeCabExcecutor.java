@@ -40,7 +40,7 @@ import jp.assoon.util.Constants;
  * @author Yusuke Ota
  *
  */
-public class MeCab {
+public class MeCabExcecutor {
 
 	// 1文書あたりの単語数
 	private int nword;
@@ -54,7 +54,7 @@ public class MeCab {
 		return wordInfoListList;
 	}
 
-	public MeCab(int nword, String mecabPropPath) {
+	public MeCabExcecutor(int nword, String mecabPropPath) {
 		this.nword = nword;
 		// ストップワードファイルを読み込む
 		InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
@@ -83,7 +83,7 @@ public class MeCab {
 
 	}
 
-	public void run(String inputfile, String outputPath, String[] hinshi) {
+	public void execute(String inputfile, String outputPath, String[] hinshi) {
 		//入力ファイルが正しいかチェック
 		if(!new File(inputfile).exists()){
 			throw new IllegalArgumentException("Inputfile does not found.");

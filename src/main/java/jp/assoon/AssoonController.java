@@ -41,9 +41,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jp.assoon.lda.LDAExecution;
+import jp.assoon.lda.LDAExecutior;
 import jp.assoon.lda.TopicInfo;
-import jp.assoon.mecab.MeCab;
+import jp.assoon.mecab.MeCabExcecutor;
 import jp.assoon.util.Constants;
 import jp.assoon.util.AssoonUtils;
 
@@ -130,11 +130,11 @@ public class AssoonController {
 		AssoonUtils.replaceHalfSpaceInTextFile(userDir + "/" + Constants.POST_FILE);
 		
 		// 形態素解析
-		MeCab mecab = new MeCab(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
-		mecab.run(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
+		MeCabExcecutor mecab = new MeCabExcecutor(Constants.WORDS_PER_ONE_DOC, mecabPropPath);
+		mecab.execute(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
 		
 		//LDA 実行
-		List<TopicInfo>topicInfoList = new LDAExecution().executeLDA(mecab,userDir,alpha,beta, this.topic,iter);
+		List<TopicInfo>topicInfoList = new LDAExecutior().execute(mecab,userDir,alpha,beta, this.topic,iter);
 		
 		// 解析の詳細をクライアントに送る
 		model.addAttribute("postFlg", true);

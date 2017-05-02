@@ -21,6 +21,9 @@ package jp.assoon.util;
  *
  */
 public class Constants {
+	
+	private Constants(){};
+	
 	// posted text file by user
 	public static final String POST_FILE = "postfile.txt";
 	// text file after executing MeCab

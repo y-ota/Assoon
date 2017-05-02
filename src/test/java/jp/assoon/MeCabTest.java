@@ -11,12 +11,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import jp.assoon.mecab.MeCab;
+import jp.assoon.mecab.MeCabExcecutor;
 import jp.assoon.util.AssoonUtils;
 
 public class MeCabTest {
 
-	private MeCab mecab;
+	private MeCabExcecutor mecab;
 	private static final String inputFilePath = "target/testdata1.txt";
 	private static final String outputFilePath = "target/testdata1_after.txt";
 	private static final String[] hinshi = {"1"};
@@ -79,7 +79,7 @@ public class MeCabTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		mecab = new MeCab(1, "src/main/webapp/WEB-INF/mecab.properties");
+		mecab = new MeCabExcecutor(1, "src/main/webapp/WEB-INF/mecab.properties");
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class MeCabTest {
 		String[] hinshi = {"1"};
 		TestFileCreater.createInputFile(inputFilePath);
 		List<String> correctList = TestFileCreater.createCorrectList();
-		mecab.run(inputFilePath, outputFilePath, hinshi);
+		mecab.execute(inputFilePath, outputFilePath, hinshi);
 		List<String> outputFileList = AssoonUtils.readText(outputFilePath);
 		Assert.assertThat(correctList, equalTo(outputFileList));
 	}
@@ -96,7 +96,7 @@ public class MeCabTest {
 	//if the input file path is invalid
 	@Test(expected=IllegalArgumentException.class)
 	public void doMeCabInInvalidInputPath(){
-		mecab.run("", outputFilePath, hinshi);
+		mecab.execute("", outputFilePath, hinshi);
 	}
 	
 	//if the input file is empty 
@@ -106,7 +106,7 @@ public class MeCabTest {
 		String[] hinshi = {"1"};
 		TestFileCreater.createEmptyFile(inputFilePath);
 		List<String> correctList = TestFileCreater.createCorrectEmptyList();
-		mecab.run(inputFilePath, outputFilePath, hinshi);
+		mecab.execute(inputFilePath, outputFilePath, hinshi);
 		List<String> outputFileList = AssoonUtils.readText(outputFilePath);
 		Assert.assertThat(correctList, equalTo(outputFileList));
 	}
@@ -117,18 +117,18 @@ public class MeCabTest {
 		//8を入れてエラーを出す
 		String[] hinshi = {"1","8"};
 		TestFileCreater.createEmptyFile(inputFilePath);
-		mecab.run(inputFilePath, outputFilePath, hinshi);
+		mecab.execute(inputFilePath, outputFilePath, hinshi);
 	}
 	
 	@Test(expected=RuntimeException.class)
 	public void testNotExistFile() {
-		mecab = new MeCab(1, "aaaaaaaa.properties");
-		mecab.run(inputFilePath, outputFilePath, hinshi);
+		mecab = new MeCabExcecutor(1, "aaaaaaaa.properties");
+		mecab.execute(inputFilePath, outputFilePath, hinshi);
 	}
 	
 	@Test(expected=RuntimeException.class)
 	public void testInvalidPropertyFile() {
-		mecab = new MeCab(1, "test/java/jp/assoon/data/invalid_mecab.properties");
+		mecab = new MeCabExcecutor(1, "test/java/jp/assoon/data/invalid_mecab.properties");
 	}
 
 

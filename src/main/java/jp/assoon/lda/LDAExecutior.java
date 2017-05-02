@@ -9,13 +9,13 @@ import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import jgibblda.LDA;
-import jp.assoon.mecab.MeCab;
+import jp.assoon.mecab.MeCabExcecutor;
 import jp.assoon.util.Constants;
 import jp.assoon.util.AssoonUtils;
 
-public class LDAExecution {
+public class LDAExecutior {
 	
-	public List<TopicInfo> executeLDA(MeCab mecab, String userDir, double alpha, double beta, int topic, int iter){
+	public List<TopicInfo> execute(MeCabExcecutor mecab, String userDir, double alpha, double beta, int topic, int iter){
 		// LDA実行
 		LDA.main(new String[] { "-est", "-alpha", String.valueOf(alpha), "-beta", String.valueOf(beta), "-ntopics", 
 				String.valueOf(topic), "-niters", String.valueOf(iter), "-twords",
@@ -33,27 +33,7 @@ public class LDAExecution {
 		Map<String, List<Double>> phiMap = readPhiFile(userDir + "/model-final.phi");
 
 		// 文書ごと、トピックごとに単語の生成確率の平均を出す
-		List<Map<Integer, Double>> socreList = new ArrayList<>();
-
-		for (int i = 0; i < mecab.getWordInfoList().size(); i++) {
-			Map<Integer, Double> scoreMap = new LinkedHashMap<>();
-			for (int j = 0; j < mecab.getWordInfoList().get(i).size(); j++) {
-				if (scoreMap.containsKey(wordTopicAssignList.get(i).get(j))) {
-					scoreMap.put(
-							wordTopicAssignList.get(i)
-									.get(j),
-							scoreMap.get(
-									wordTopicAssignList.get(i).get(j)) + phiMap
-											.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
-											.get(wordTopicAssignList.get(i).get(j)));
-				} else {
-					scoreMap.put(wordTopicAssignList.get(i).get(j), phiMap
-							.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
-							.get(wordTopicAssignList.get(i).get(j)));
-				}
-			}
-			socreList.add(scoreMap);
-		}
+		List<Map<Integer, Double>> socreList = getWordProp(mecab, wordTopicAssignList, phiMap);
 
 		// トピックごとの類似意見数を求める
 		Map<Integer, Integer> topicCountMap = getTopicCountMap(topic, socreList);
@@ -77,6 +57,31 @@ public class LDAExecution {
 		}
 
 		return topicInfoList.stream().sorted((a,b)->b.getSimcount()-a.getSimcount()).collect(Collectors.toList());
+	}
+
+	private List<Map<Integer, Double>> getWordProp(MeCabExcecutor mecab, List<List<Integer>> wordTopicAssignList, Map<String, List<Double>> phiMap) {
+		List<Map<Integer, Double>> socreList = new ArrayList<>();
+		
+		for (int i = 0; i < mecab.getWordInfoList().size(); i++) {
+			Map<Integer, Double> scoreMap = new LinkedHashMap<>();
+			for (int j = 0; j < mecab.getWordInfoList().get(i).size(); j++) {
+				if (scoreMap.containsKey(wordTopicAssignList.get(i).get(j))) {
+					scoreMap.put(
+							wordTopicAssignList.get(i)
+									.get(j),
+							scoreMap.get(
+									wordTopicAssignList.get(i).get(j)) + phiMap
+											.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
+											.get(wordTopicAssignList.get(i).get(j)));
+				} else {
+					scoreMap.put(wordTopicAssignList.get(i).get(j), phiMap
+							.get(AssoonUtils.replaceHalfEscapeCharToFullEscapeChar(mecab.getWordInfoList().get(i).get(j).getWord()))
+							.get(wordTopicAssignList.get(i).get(j)));
+				}
+			}
+			socreList.add(scoreMap);
+		}
+		return socreList;
 	}
 
 	/**
@@ -113,7 +118,7 @@ public class LDAExecution {
 	 * @param i
 	 * @return
 	 */
-	private List<String> getTopText(MeCab mecab, List<DocProp> listDoc, List<List<Integer>> wordTopicAssignList, List<Map<Integer, Double>> socreList, int i) {
+	private List<String> getTopText(MeCabExcecutor mecab, List<DocProp> listDoc, List<List<Integer>> wordTopicAssignList, List<Map<Integer, Double>> socreList, int i) {
 		List<String> list = new ArrayList<>();
 
 		// トピック比率がもっとも高いテキストをadd
@@ -211,7 +216,7 @@ public class LDAExecution {
 		return returnValue;
 	}
 	
-	public List<WordProp> readTopicFile(String path) {
+	private List<WordProp> readTopicFile(String path) {
 		List<String> list = AssoonUtils.readText(path);
 		List<WordProp> returnList = new ArrayList<>();
 		list.stream().limit(20).forEach(line->{
