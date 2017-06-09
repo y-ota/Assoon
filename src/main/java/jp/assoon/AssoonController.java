@@ -42,6 +42,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import jp.assoon.lda.LDAExecutior;
+import jp.assoon.lda.LDAExecutor;
 import jp.assoon.lda.TopicInfo;
 import jp.assoon.mecab.MeCabExcecutor;
 import jp.assoon.util.Constants;
@@ -134,7 +135,7 @@ public class AssoonController {
 		mecab.execute(userDir + "/" + Constants.POST_FILE, userDir + "/" + Constants.SPACE_SEP_FILE, word);
 		
 		//LDA 実行
-		List<TopicInfo>topicInfoList = new LDAExecutior().execute(mecab,userDir,alpha,beta, this.topic,iter);
+		List<TopicInfo>topicInfoList = new LDAExecutor().execute(mecab,userDir,alpha,beta, this.topic,iter);
 		
 		// 解析の詳細をクライアントに送る
 		model.addAttribute("postFlg", true);
