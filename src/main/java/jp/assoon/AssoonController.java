@@ -41,12 +41,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
-import jp.assoon.lda.LDAExecutior;
 import jp.assoon.lda.LDAExecutor;
 import jp.assoon.lda.TopicInfo;
 import jp.assoon.mecab.MeCabExcecutor;
-import jp.assoon.util.Constants;
 import jp.assoon.util.AssoonUtils;
+import jp.assoon.util.Constants;
 
 /**
  * Asoon Controler
