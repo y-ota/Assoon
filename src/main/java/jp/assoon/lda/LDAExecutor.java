@@ -13,7 +13,7 @@ import jp.assoon.mecab.MeCabExcecutor;
 import jp.assoon.util.Constants;
 import jp.assoon.util.AssoonUtils;
 
-public class LDAExecutior {
+public class LDAExecutor {
 	
 	public List<TopicInfo> execute(MeCabExcecutor mecab, String userDir, double alpha, double beta, int topic, int iter){
 		// LDA実行
