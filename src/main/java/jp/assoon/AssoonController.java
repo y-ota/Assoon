@@ -123,7 +123,7 @@ public class AssoonController {
 				FileCopyUtils.copy(file.getInputStream(), out);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e);
+			throw new RuntimeException(e); 
 		}
 
 		// ファイルの中身の半角スペースを全角スペースに置換
