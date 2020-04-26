@@ -7,7 +7,10 @@ Assoonは、自由記述アンケートの回答を自動的に要約するた�
 
 Assoon is an automatic summarizing system for short text such as free description questionnare. It is using machine learning(LDA:Latent Dirichlet Allocation).
 
-http://assoon.jp
+## Demo
+Please visit my website... 
+
+http://160.16.126.40/
 ![Sample screenshot 1](/readme/screenshot1.png)
 
 ## Documentation
