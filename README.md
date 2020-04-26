@@ -10,7 +10,7 @@ Assoonは、自由記述アンケートの回答を自動的に要約するた�
 
 
 ## Demo
-Please visit my website... 
+Please visit my website and click `DEMO` button.
 
 http://assoon.net/
 ![Sample screenshot 1](/readme/screenshot1.png)
