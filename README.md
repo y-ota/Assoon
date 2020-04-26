@@ -12,7 +12,7 @@ Assoonは、自由記述アンケートの回答を自動的に要約するた�
 ## Demo
 Please visit my website... 
 
-http://160.16.126.40/
+http://assoon.net/
 ![Sample screenshot 1](/readme/screenshot1.png)
 
 ## Documentation
