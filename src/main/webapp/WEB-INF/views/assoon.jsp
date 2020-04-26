@@ -126,7 +126,7 @@
 			</table>
 		</c:if>
 		<div class="footer">
-			<p>© 2016-2017 Assoon.jp All Rights Reserved.</p>
+			<p>© 2016-2017  All Rights Reserved.</p>
 		</div>
 	</div>
 	<c:if test="${!empty postFlg}">
