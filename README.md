@@ -3,7 +3,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/y-ota/Assoon/badge.svg)](https://coveralls.io/github/y-ota/Assoon)
 [![GPL License](https://img.shields.io/badge/license-GPLv3-blue.svg?style=flat)](LICENSE)
 
-Assoon is an automatic summarizing system for short text such as free description questionnare. It is using machine learning(LDA:Latent Dirichlet Allocation).
+Assoon is an automatic summarizing system for short text such as free descriptive answers. It is using machine learning(LDA:Latent Dirichlet Allocation).
 
 Assoonは、自由記述アンケートの回答を自動的に要約するためのWebアプリケーションです。テキストファイルをアップロードするだけで簡単にご利用できます。要約には、機械学習(LDA:Latent Dirichlet Allocation)を利用しています。
 
