@@ -28,13 +28,6 @@
 
 package  jgibblda;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
-import java.util.Vector;
-
 public class Inferencer {	
 	// Train model
 	public Model trnModel;
@@ -95,7 +88,6 @@ public class Inferencer {
 	
 	public Model inference(String [] strs){
 		//System.out.println("inference");
-		Model newModel = new Model();
 		
 		//System.out.println("read dataset");
 		LDADataset dataset = LDADataset.readDataSet(strs, globalDict);

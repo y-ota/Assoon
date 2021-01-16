@@ -15,12 +15,16 @@
 package jp.assoon.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +33,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
-import jp.assoon.lda.WordProp;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 public class AssoonUtils {
 	
@@ -165,6 +169,53 @@ public class AssoonUtils {
 	public static void deleteDirectory(String dirPath) {
 	    recursiveDeleteFile(new File(dirPath));
 	}
+	
+	
+    private static List<String> getFileList(String dir) {
+    	List<String> fileList = new ArrayList<>();
+        File directory = new File(dir);
+        File[] files = directory.listFiles();
+        if (files != null && files.length > 0) {
+            for (File file : files) {
+                if (file.isFile()) {
+                    fileList.add(file.getAbsolutePath());
+                } else {
+                	fileList.addAll( getFileList(file.getAbsolutePath()));
+                }
+            }
+        }
+        return fileList;
+    }
+	
+	public static byte[] compressDirectory(String dir) {
+        List<String> fileList = getFileList(dir);
+
+        try (ByteArrayOutputStream fos = new ByteArrayOutputStream();
+             ZipOutputStream zos = new ZipOutputStream(fos)) {
+
+            for (String filePath : fileList) {
+                String name = Paths.get(filePath).toFile().getPath();
+
+                ZipEntry zipEntry = new ZipEntry(name);
+                zos.putNextEntry(zipEntry);
+
+                try (FileInputStream fis = new FileInputStream(filePath)) {
+                    byte[] buffer = new byte[1024];
+                    int length;
+                    while ((length = fis.read(buffer)) > 0) {
+                        zos.write(buffer, 0, length);
+                    }
+
+                    zos.closeEntry();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return fos.toByteArray();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
 	
 	private static void recursiveDeleteFile(File file) {
 	    if (!file.exists()) {

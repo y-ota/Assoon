@@ -139,6 +139,7 @@ public class AssoonController {
 		// 解析の詳細をクライアントに送る
 		model.addAttribute("postFlg", true);
 		model.addAttribute("topicInfo", topicInfoList);
+		model.addAttribute("results.zip",AssoonUtils.compressDirectory(userDir));
 
 		//userDir削除
 		AssoonUtils.deleteDirectory(userDir);

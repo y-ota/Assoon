@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,19 +37,19 @@ import jp.assoon.util.Constants;
 
 /**
  * MeCab
- * 
+ *
  * @author Yusuke Ota
  *
  */
-public class MeCabExcecutor {
+public class MeCabExcecutor implements MorphologicalAnalysis{
 
 	// 1文書あたりの単語数
 	private int nword;
 	private List<List<WordInfo>> wordInfoListList = new ArrayList<List<WordInfo>>();
 	// ストップワード
-	private List<String> stopwordList; 
+	private List<String> stopwordList;
 	// MeCab実行パス
-	private static String mecabBinPath; 
+	private static String mecabBinPath;
 
 	public List<List<WordInfo>> getWordInfoList() {
 		return wordInfoListList;
@@ -56,10 +57,8 @@ public class MeCabExcecutor {
 
 	public MeCabExcecutor(int nword, String mecabPropPath) {
 		this.nword = nword;
-		// ストップワードファイルを読み込む
-		InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
-		stopwordList = stopwordStream == null ? 
-				Collections.emptyList():AssoonUtils.readText(new InputStreamReader(stopwordStream, StandardCharsets.UTF_8));
+		readStopWordFile();
+
 		// MeCabパスの取得
 		Properties properties = new Properties();
 		try (InputStreamReader is = new InputStreamReader(new FileInputStream(mecabPropPath), StandardCharsets.UTF_8)) {
@@ -80,17 +79,23 @@ public class MeCabExcecutor {
 		if (!new File(mecabBinPath).exists()) {
 			throw new RuntimeException("Invalid meCab execution path. Please set the value in mecab.properties correctly.");
 		}
-
 	}
 
+    private void readStopWordFile() {
+        // ストップワードファイルを読み込む
+		InputStream stopwordStream = getClass().getResourceAsStream("stopword.txt");
+		stopwordList = stopwordStream == null ?
+				Collections.emptyList():AssoonUtils.readText(new InputStreamReader(stopwordStream, StandardCharsets.UTF_8));
+    }
+
 	public void execute(String inputfile, String outputPath, String[] hinshi) {
-		//入力ファイルが正しいかチェック
+	    //入力ファイルが正しいかチェック
 		if(!new File(inputfile).exists()){
 			throw new IllegalArgumentException("Inputfile does not found.");
 		}
-		
+
 		//解析対象の品詞をマッピングする
-		List<String> listHinshi = Arrays.stream(hinshi).map(str-> {
+		List<String> hinshiList = Arrays.stream(hinshi).map(str-> {
 			if ("1".equals(str)) {
 				return "名詞";
 			} else if ("2".equals(str)) {
@@ -103,14 +108,14 @@ public class MeCabExcecutor {
 				throw new IllegalArgumentException();
 			}
 		}).collect(Collectors.toList());
-		
+
 		//MeCab実行
 		BufferedReader br = null;
 		Process ps = null;
 		try {
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			List<WordInfo> wordInfoList = new ArrayList<>();
-			List<String> docIdList = new ArrayList<String>();
+			List<String> docIdList = new ArrayList<>();
 			list.add("0");
 			StringBuilder sb = new StringBuilder();
 			int doccnt = 0;
@@ -147,10 +152,8 @@ public class MeCabExcecutor {
 
 					// 形態素解析の列(例： 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン)を処理する
 				} else {
-					// 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
-					Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),[^,]+,[^,]+,[^,]+,[^,]+,([^,]+)");
 					Matcher matcher = targetTypePattern.matcher(targetLine);
-					if (!matcher.find()) throw new RuntimeException("The line dose not match. :" + targetLine); 
+					if (!matcher.find()) throw new RuntimeException("The line dose not match. :" + targetLine);
 					String word = matcher.group(1);
 					String targetType1 = matcher.group(2);
 					String targetType2 = matcher.group(3);
@@ -159,9 +162,9 @@ public class MeCabExcecutor {
 					// 指定して品詞で、かつストップワードでないことかつ
 					// 一般名詞、固有名詞、サ変接続 のみとし、読みがない場合(*)はリストに追加しない
 					// 参考：http://www.unixuser.org/~euske/doc/postag/
-					if (listHinshi.contains(targetType1) 
+					if (hinshiList.contains(targetType1)
 							&& !stopwordList.contains(word)
-							&& !targetEnd.equals("*") 
+							&& !targetEnd.equals("*")
 							&& (targetType2.equals("一般") || targetType2.equals("固有名詞") || targetType2.equals("サ変接続"))) {
 						WordInfo wordInfo = new WordInfo();
 						wordInfo.setStartIndex(wordLength);
@@ -197,5 +200,20 @@ public class MeCabExcecutor {
 			}
 		}
 	}
+
+    // 保育園  名詞,一般,*,*,*,*,保育園,ホイクエン,ホイクエン
+    private Pattern targetTypePattern = Pattern.compile("([^\\t]+)\\t([^,]+),([^,]+),[^,]+,[^,]+,[^,]+,[^,]+,([^,]+)");
+
+    @Override
+    public void close() throws Exception {
+        // TODO 自動生成されたメソッド・スタブ
+
+    }
+
+    @Override
+    public void execute(Path inputFilePath, Path outputFilePath) {
+        // TODO 自動生成されたメソッド・スタブ
+
+    }
 
 }
