@@ -19,6 +19,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -140,8 +142,9 @@ public class AssoonController {
 		model.addAttribute("postFlg", true);
 		model.addAttribute("topicInfo", topicInfoList);
 
-		//userDir削除
-		AssoonUtils.deleteDirectory(userDir);
+		//古いデータディレクトリの削除
+		Path dataDir = Paths.get(webInfPath + "/data/");
+		AssoonUtils.deleteOldDataDirectories(dataDir, 20);
 		
 		return "assoon";
 	}
