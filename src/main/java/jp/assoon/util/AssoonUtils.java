@@ -21,6 +21,7 @@ import java.io.InputStreamReader;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,151 +30,175 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
+import javax.xml.transform.stream.StreamSource;
 
 import jp.assoon.lda.WordProp;
 
 public class AssoonUtils {
-	
-	private AssoonUtils(){};
-	
-	/**
-	 * After reading the file of the inputStream specified, return list
-	 */
-	public static List<String> readText(InputStreamReader is) {
-		List<String> list = new ArrayList<String>();
-		BufferedReader br = null;
-		String line = null;
-		try {
-			br = new BufferedReader(is);
-			while ((line = br.readLine()) != null) {
-				list.add(line);
-			}
-			return list;
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (IOException e) {
-					throw new UncheckedIOException(e);
-				}
-			}
-		}
-	}
 
-	/**
-	 * After reading the file of the path specified, return list
-	 */
-	public static List<String> readText(String filePath) {
-		try {
-			return Files.readAllLines(Paths.get(filePath), StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
+  private AssoonUtils() {};
 
-	/**
-	 *  Write the list specified to the output path specified 
-	 */
-	public static void write(List<String> list, String outputPath) {
-		try {
-			Files.write(Paths.get(outputPath), list, StandardCharsets.UTF_8);
-		} catch (IOException e) {
-			throw new UncheckedIOException(e);
-		}
-	}
+  /** After reading the file of the inputStream specified, return list */
+  public static List<String> readText(InputStreamReader is) {
+    List<String> list = new ArrayList<String>();
+    BufferedReader br = null;
+    String line = null;
+    try {
+      br = new BufferedReader(is);
+      while ((line = br.readLine()) != null) {
+        list.add(line);
+      }
+      return list;
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    } finally {
+      if (br != null) {
+        try {
+          br.close();
+        } catch (IOException e) {
+          throw new UncheckedIOException(e);
+        }
+      }
+    }
+  }
 
-	/**
-	 * 半角エスケープ文字を全角エスケープ文字に置換する
-	 * @param str 半角エスケープ文字
-	 * @return 全角エスケープ文字
-	 */
-	public static String replaceHalfEscapeCharToFullEscapeChar(String str){
-		return str.replace("\"", "”").replace("'", "\\'")
-		.replace("\\", "￥").replace("%", "％").replace("&", "＆").replace("+", "＋");
-	}
+  /** After reading the file of the path specified, return list */
+  public static List<String> readText(String filePath) {
+    try {
+      return Files.readAllLines(Paths.get(filePath), StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 
+  /** Write the list specified to the output path specified */
+  public static void write(List<String> list, String outputPath) {
+    try {
+      Files.write(Paths.get(outputPath), list, StandardCharsets.UTF_8);
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
+  }
 
-	/**
-	 * ファイルの中身の半角スペースを全角スペースに置換
-	 * 
-	 * @param filePath
-	 * @param before
-	 * @param after
-	 */
-	public static void replaceHalfSpaceInTextFile(String filePath) {
-		List<String> fileList = readText(filePath).stream().map(a->a.replace(" ", "　")).collect(Collectors.toList());
-		write(fileList, filePath);
-	}
+  /**
+   * 半角エスケープ文字を全角エスケープ文字に置換する
+   *
+   * @param str 半角エスケープ文字
+   * @return 全角エスケープ文字
+   */
+  public static String replaceHalfEscapeCharToFullEscapeChar(String str) {
+    return str.replace("\"", "”")
+        .replace("'", "\\'")
+        .replace("\\", "￥")
+        .replace("%", "％")
+        .replace("&", "＆")
+        .replace("+", "＋");
+  }
 
-	/**
-	 * データの最大値のトピックを返す
-	 * 
-	 * @param data
-	 * @param topicNum
-	 * @return
-	 */
-	public static int maxTopicValueDocId(List<Map<Integer, Double>> data, int topicNum) {
-		int docId = 0;
-		double maxValue = 0.0;
-		if (data.get(0).containsKey(topicNum)) {
-			maxValue = data.get(0).get(topicNum);
-		}
+  /**
+   * ファイルの中身の半角スペースを全角スペースに置換
+   *
+   * @param filePath
+   * @param before
+   * @param after
+   */
+  public static void replaceHalfSpaceInTextFile(String filePath) {
+    List<String> fileList =
+        readText(filePath).stream().map(a -> a.replace(" ", "　")).collect(Collectors.toList());
+    write(fileList, filePath);
+  }
 
-		int index = 0;
-		for (Map<Integer, Double> map : data) {
-			if (map.containsKey(topicNum)) {
-				if (maxValue < map.get(topicNum)) {
-					maxValue = map.get(topicNum);
-					docId = index;
-				}
-			}
-			index++;
-		}
-		return docId;
-	}
+  /**
+   * データの最大値のトピックを返す
+   *
+   * @param data
+   * @param topicNum
+   * @return
+   */
+  public static int maxTopicValueDocId(List<Map<Integer, Double>> data, int topicNum) {
+    int docId = 0;
+    double maxValue = 0.0;
+    if (data.get(0).containsKey(topicNum)) {
+      maxValue = data.get(0).get(topicNum);
+    }
 
-	/**
-	 * Return the index of the max value in specified double array
-	 */
-	public static Integer maxValueTopic(double[] values) {
-		List<Double> doubles = Arrays.stream(values).boxed().collect(Collectors.toList());
-		int maxIndex = IntStream.range(0, values.length)
-				         .boxed().max(Comparator.comparingDouble(doubles::get)).get();
-		double max = doubles.get(maxIndex);
-		// if the values have multiple max values, return null value.
-		Map<Double,Long> map = Arrays.stream(values).boxed()
-				                .collect(Collectors.groupingBy(Double::valueOf,Collectors.counting()));
-		return  map.get(max).longValue() >= 2? null:maxIndex;
-	}
+    int index = 0;
+    for (Map<Integer, Double> map : data) {
+      if (map.containsKey(topicNum)) {
+        if (maxValue < map.get(topicNum)) {
+          maxValue = map.get(topicNum);
+          docId = index;
+        }
+      }
+      index++;
+    }
+    return docId;
+  }
 
-	private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+  /** Return the index of the max value in specified double array */
+  public static Integer maxValueTopic(double[] values) {
+    List<Double> doubles = Arrays.stream(values).boxed().collect(Collectors.toList());
+    int maxIndex =
+        IntStream.range(0, values.length)
+            .boxed()
+            .max(Comparator.comparingDouble(doubles::get))
+            .get();
+    double max = doubles.get(maxIndex);
+    // if the values have multiple max values, return null value.
+    Map<Double, Long> map =
+        Arrays.stream(values)
+            .boxed()
+            .collect(Collectors.groupingBy(Double::valueOf, Collectors.counting()));
+    return map.get(max).longValue() >= 2 ? null : maxIndex;
+  }
 
-	public static boolean isLinux() {
-		return OS_NAME.startsWith("linux");
-	}
+  private static final String OS_NAME = System.getProperty("os.name").toLowerCase();
 
-	public static boolean isMac() {
-		return OS_NAME.startsWith("mac");
-	}
+  public static boolean isLinux() {
+    return OS_NAME.startsWith("linux");
+  }
 
-	public static boolean isWindows() {
-		return OS_NAME.startsWith("windows");
-	}
-	
-	public static void deleteDirectory(String dirPath) {
-	    recursiveDeleteFile(new File(dirPath));
-	}
-	
-	private static void recursiveDeleteFile(File file) {
-	    if (!file.exists()) {
-	        return;
-	    }
-	    if (file.isDirectory()) {
-	    	Arrays.stream(file.listFiles()).forEach(a->recursiveDeleteFile(a));
-	    }
-	    file.delete();
-	}
+  public static boolean isMac() {
+    return OS_NAME.startsWith("mac");
+  }
 
+  public static boolean isWindows() {
+    return OS_NAME.startsWith("windows");
+  }
+
+  /**
+   * 古いデータ格納ディレクトリを削除する
+   *
+   * @param dirPath
+   * @param remainings
+   */
+  public static void deleteOldDataDirectories(Path dirPath, int remainings) {
+    List<File> dirs =
+        Stream.of(dirPath.toFile().listFiles())
+            .sorted((a, b) -> b.compareTo(a))
+            .collect(Collectors.toList());
+    int index = 1;
+    for (File dir : dirs) {
+      if (index > remainings) {
+        deleteDirectory(dir.getAbsolutePath());
+      }
+      index++;
+    }
+  }
+
+  public static void deleteDirectory(String dirPath) {
+    recursiveDeleteFile(new File(dirPath));
+  }
+
+  private static void recursiveDeleteFile(File file) {
+    if (!file.exists()) {
+      return;
+    }
+    if (file.isDirectory()) {
+      Arrays.stream(file.listFiles()).forEach(a -> recursiveDeleteFile(a));
+    }
+    file.delete();
+  }
 }
